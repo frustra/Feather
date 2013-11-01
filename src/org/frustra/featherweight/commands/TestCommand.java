@@ -11,7 +11,7 @@ public class TestCommand extends Command {
 
 	public void execute(Entity source, String[] arguments) {
 		System.out.println("test executed!");
-		Command.respond(source, "foo", new Object[] { "bar", "baz" });
+		Command.respond(source.entity, "your message was received!", new Object[] { "bar", "baz" });
 
 		for (String s : arguments) {
 			System.out.println(s);
