@@ -18,7 +18,7 @@ public class TestCommand extends Command {
 		System.out.println("name: " + source.getName());
 		Command.execute("kick " + source.getName());
 	}
-	
+
 	public boolean hasPermission(Entity source) {
 		return true;
 	}

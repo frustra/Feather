@@ -36,13 +36,13 @@ public class CustomClassLoader extends URLClassLoader {
 	public MethodNode getCommandNameMethod = null;
 	public MethodNode hasPermissionMethod = null;
 	public MethodNode handleExecuteMethod = null;
-	
+
 	public CustomClassLoader(File jarPath) throws IOException {
-		super(new URL[] {jarPath.toURI().toURL()});
+		super(new URL[] { jarPath.toURI().toURL() });
 		this.jarPath = jarPath;
 		this.jarFile = new JarFile(jarPath);
 	}
-	
+
 	public Class<?> getPrimitiveType(String name) throws ClassNotFoundException {
 		if (name.equals("byte")) return byte.class;
 		if (name.equals("short")) return short.class;
@@ -56,9 +56,9 @@ public class CustomClassLoader extends URLClassLoader {
 		// new ClassNotFoundException(name).printStackTrace();
 		throw new ClassNotFoundException(name);
 	}
-	
+
 	HashMap<String, Class<?>> loaded = new HashMap<String, Class<?>>();
-	
+
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
 		Class<?> cls = loaded.get(name);
 		if (cls == null) {
@@ -67,7 +67,7 @@ public class CustomClassLoader extends URLClassLoader {
 		}
 		return cls;
 	}
-	
+
 	private Class<?> defineClass(String name) throws ClassNotFoundException {
 		if (name == null) return null;
 		try {
@@ -85,21 +85,21 @@ public class CustomClassLoader extends URLClassLoader {
 			throw new ClassNotFoundException(name, e);
 		}
 	}
-	
+
 	public byte[] getClassBytes(String name) {
 		CustomClassNode node = moddedClasses.get(name);
 		if (node == null) node = commandClasses.get(name);
-		
+
 		if (node != null) {
 			Injection.injectNode(node, this);
-			
+
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			node.accept(writer);
-			
+
 			return writer.toByteArray();
 		} else return null;
 	}
-	
+
 	public InputStream getResourceAsStream(String name) {
 		if (name.endsWith(".class")) {
 			byte[] buf = getClassBytes(name.substring(0, name.length() - 6).replace('/', '.'));
@@ -107,7 +107,7 @@ public class CustomClassLoader extends URLClassLoader {
 		}
 		return super.getResourceAsStream(name);
 	}
-	
+
 	public URL findResource(String name) {
 		byte[] buf = null;
 		if (name.endsWith(".class")) buf = getClassBytes(name.substring(0, name.length() - 6).replace('/', '.'));
@@ -118,8 +118,9 @@ public class CustomClassLoader extends URLClassLoader {
 		URLStreamHandler handler = new URLStreamHandler() {
 			protected URLConnection openConnection(URL url) throws IOException {
 				return new URLConnection(url) {
-					public void connect() throws IOException {}
-					
+					public void connect() throws IOException {
+					}
+
 					public InputStream getInputStream() {
 						return stream;
 					}
@@ -133,7 +134,7 @@ public class CustomClassLoader extends URLClassLoader {
 			return null;
 		}
 	}
-	
+
 	public void loadJar() {
 		try {
 			moddedClasses.clear();
@@ -153,7 +154,8 @@ public class CustomClassLoader extends URLClassLoader {
 							} else if (constant instanceof Type) {
 								node.references.add((Type) constant);
 							}
-						} catch (Exception e) {}
+						} catch (Exception e) {
+						}
 					}
 					node.access &= ~(Opcodes.ACC_FINAL | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE);
 					node.access |= Opcodes.ACC_PUBLIC;

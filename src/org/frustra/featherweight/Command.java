@@ -22,9 +22,9 @@ public abstract class Command {
 	 */
 	public abstract void execute(Entity source, String[] arguments);
 
-
 	/**
 	 * Executes a command string as the server
+	 * 
 	 * @param command
 	 */
 	public static void execute(String command) {
@@ -32,7 +32,8 @@ public abstract class Command {
 	}
 
 	/**
-	 * Executes a command string as source
+	 * Executes a command string as a particular source
+	 * 
 	 * @param source
 	 * @param command
 	 */
@@ -45,11 +46,11 @@ public abstract class Command {
 				executeCommandMethod = commandManagerClass.getDeclaredMethod(loader.executeCommandMethod.name, loader.loadClass(args[0].getClassName()), String.class);
 				executeCommandMethod.setAccessible(true);
 			}
-			executeCommandMethod.invoke(FeatherWeight.commandManager, new Object[] {source, command});
+			executeCommandMethod.invoke(FeatherWeight.commandManager, new Object[] { source, command });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static Method executeCommandMethod = null;
 }

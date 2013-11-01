@@ -17,37 +17,35 @@ public class FeatherWeight {
 	public static Object minecraftServer = null;
 	public static Object commandManager = null;
 	public static CustomClassLoader loader = null;
-	
+
 	public static void main(String[] args) throws Exception {
 		System.out.println("FeatherWeight v" + FeatherWeight.version);
-		
+
 		File minecraftServer = new File("lib/minecraft_server.jar");
 		if (!minecraftServer.exists()) {
 			System.err.println("Minecraft server jar is missing");
 			return;
 		}
-		
+
 		CustomClassLoader loader = new CustomClassLoader(minecraftServer);
-		
+
 		loader.loadJar();
 		loadHooks(loader);
-		
-		Class<?>[] commands = new Class<?>[] {
-			TestCommand.class
-		};
+
+		Class<?>[] commands = new Class<?>[] { TestCommand.class };
 		for (Class<?> cls : commands) {
 			loader.commandClasses.put(cls.getName(), loadOwnClass(cls.getName()));
 		}
 		loader.moddedClasses.put(Entity.class.getName(), loadOwnClass(Entity.class.getName()));
 
 		Thread.currentThread().setContextClassLoader(loader);
-		
+
 		Class<?> cls = loader.loadClass("net.minecraft.server.MinecraftServer");
-		Method entryPoint = cls.getDeclaredMethod("main", new Class[] {String[].class});
+		Method entryPoint = cls.getDeclaredMethod("main", new Class[] { String[].class });
 		entryPoint.setAccessible(true);
-		entryPoint.invoke(null, new Object[] {args});
+		entryPoint.invoke(null, new Object[] { args });
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void loadHooks(CustomClassLoader loader) {
 		CustomClassNode helpCommandClass = null, rconEntityClass = null;
@@ -65,7 +63,7 @@ public class FeatherWeight {
 		String baseCommandInterfaceName = (String) loader.baseCommandClass.interfaces.get(0);
 		String commandEntityInterfaceName = (String) rconEntityClass.interfaces.get(0);
 		loader.commandEntityInterface = loader.moddedClasses.get(commandEntityInterfaceName);
-		
+
 		for (MethodNode method : (List<MethodNode>) loader.commandManagerClass.methods) {
 			Type[] args = Type.getArgumentTypes(method.desc);
 			Type ret = Type.getReturnType(method.desc);
@@ -75,7 +73,7 @@ public class FeatherWeight {
 				loader.executeCommandMethod = method;
 			}
 		}
-		
+
 		CustomClassNode minecraftServer = loader.moddedClasses.get("net.minecraft.server.MinecraftServer");
 		for (FieldNode field : (List<FieldNode>) minecraftServer.fields) {
 			if (Type.getType(field.desc).getClassName().equals(commandManagerInterfaceName)) {
@@ -83,7 +81,7 @@ public class FeatherWeight {
 				break;
 			}
 		}
-		
+
 		CustomClassNode baseCommandInterface = loader.moddedClasses.get(baseCommandInterfaceName.replace('/', '.'));
 		for (MethodNode method : (List<MethodNode>) baseCommandInterface.methods) {
 			Type[] args = Type.getArgumentTypes(method.desc);
@@ -97,7 +95,7 @@ public class FeatherWeight {
 			}
 		}
 	}
-	
+
 	public static CustomClassNode loadOwnClass(String name) throws IOException {
 		InputStream classStream = FeatherWeight.class.getResourceAsStream("/" + name.replace('.', '/') + ".class");
 		CustomClassNode node = new CustomClassNode();
@@ -105,7 +103,7 @@ public class FeatherWeight {
 		reader.accept(node, 0);
 		return node;
 	}
-	
+
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		FeatherWeight.loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
 		FeatherWeight.minecraftServer = minecraftServer;
