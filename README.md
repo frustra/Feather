@@ -12,6 +12,7 @@ And all this, with:
 
  - zero runtime dependencies (i.e. doesn't require Bukkit)
  - no need to update whenever Minecraft is updated (see [Architecture](#architecture))
+ - a super-simple installation procedure that doesn't involve editing any JARs
 
 ## Installation
 
