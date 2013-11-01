@@ -30,11 +30,12 @@ public class CustomClassLoader extends URLClassLoader {
 	public CustomClassNode commandManagerClass = null;
 	public CustomClassNode baseCommandClass = null;
 	public CustomClassNode commandEntityInterface = null;
-	public MethodNode addCommandMethod = null;
 	public FieldNode commandManagerField = null;
+	public MethodNode addCommandMethod = null;
+	public MethodNode executeCommandMethod = null;
 	public MethodNode getCommandNameMethod = null;
 	public MethodNode hasPermissionMethod = null;
-	public MethodNode executeCommandMethod = null;
+	public MethodNode handleExecuteMethod = null;
 	
 	public CustomClassLoader(File jarPath) throws IOException {
 		super(new URL[] {jarPath.toURI().toURL()});

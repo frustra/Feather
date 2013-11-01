@@ -48,12 +48,11 @@ public class Injection {
 
 	@SuppressWarnings("unchecked")
 	public static void injectServer(Object minecraftServer) throws Exception {
-		CustomClassLoader loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
-		
+		CustomClassLoader loader = FeatherWeight.loader;
 		Class<?> minecraftServerClass = loader.loadClass("net.minecraft.server.MinecraftServer");
 		Field commandManagerField = minecraftServerClass.getDeclaredField(loader.commandManagerField.name);
 		commandManagerField.setAccessible(true);
-		Object commandManager = commandManagerField.get(minecraftServer);
+		FeatherWeight.commandManager = commandManagerField.get(minecraftServer);
 	
 		Class<?> commandManagerClass = loader.loadClass(loader.commandManagerClass.name.replace('/', '.'));
 		Type[] args = Type.getArgumentTypes(loader.addCommandMethod.desc);
@@ -64,26 +63,6 @@ public class Injection {
 		
 		for (CustomClassNode node : loader.commandClasses.values()) {
 			node.superName = loader.baseCommandClass.name;
-			MethodNode executeProxy = cloneMethodNode(loader.executeCommandMethod);
-			executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			executeProxy.instructions.add(new TypeInsnNode(Opcodes.NEW, entityClassName));
-			executeProxy.instructions.add(new InsnNode(Opcodes.DUP));
-			executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			executeProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, entityClassName, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Object.class)})));
-			executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
-			executeProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, node.name, "execute", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Entity.class), Type.getType(String[].class)})));
-			executeProxy.instructions.add(new InsnNode(Opcodes.RETURN));
-			node.methods.add(executeProxy);
-	
-			MethodNode hasPermissionProxy = cloneMethodNode(loader.hasPermissionMethod);
-			hasPermissionProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-			hasPermissionProxy.instructions.add(new TypeInsnNode(Opcodes.NEW, entityClassName));
-			hasPermissionProxy.instructions.add(new InsnNode(Opcodes.DUP));
-			hasPermissionProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
-			hasPermissionProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, entityClassName, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Object.class)})));
-			hasPermissionProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, node.name, "hasPermission", Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {Type.getType(Entity.class)})));
-			hasPermissionProxy.instructions.add(new InsnNode(Opcodes.IRETURN));
-			node.methods.add(hasPermissionProxy);
 			
 			for (MethodNode method : (List<MethodNode>) node.methods) {
 				if (method.name.equals("getName")) {
@@ -97,8 +76,29 @@ public class Injection {
 				}
 			}
 			
+			MethodNode executeProxy = cloneMethodNode(loader.handleExecuteMethod);
+			executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			executeProxy.instructions.add(new TypeInsnNode(Opcodes.NEW, entityClassName));
+			executeProxy.instructions.add(new InsnNode(Opcodes.DUP));
+			executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			executeProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, entityClassName, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Object.class)})));
+			executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			executeProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, node.name, "execute", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Entity.class), Type.getType(String[].class)})));
+			executeProxy.instructions.add(new InsnNode(Opcodes.RETURN));
+			node.methods.add(executeProxy);
+			
+			MethodNode hasPermissionProxy = cloneMethodNode(loader.hasPermissionMethod);
+			hasPermissionProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			hasPermissionProxy.instructions.add(new TypeInsnNode(Opcodes.NEW, entityClassName));
+			hasPermissionProxy.instructions.add(new InsnNode(Opcodes.DUP));
+			hasPermissionProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			hasPermissionProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, entityClassName, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Object.class)})));
+			hasPermissionProxy.instructions.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, node.name, "hasPermission", Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] {Type.getType(Entity.class)})));
+			hasPermissionProxy.instructions.add(new InsnNode(Opcodes.IRETURN));
+			node.methods.add(hasPermissionProxy);
+			
 			Class<?> cls = loader.loadClass(node.name.replace('/', '.'));
-			addCommandMethod.invoke(commandManager, cls.newInstance());
+			addCommandMethod.invoke(FeatherWeight.commandManager, cls.newInstance());
 		}
 	}
 }

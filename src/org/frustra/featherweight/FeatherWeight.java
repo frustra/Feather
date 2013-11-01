@@ -14,6 +14,9 @@ import org.objectweb.asm.tree.MethodNode;
 
 public class FeatherWeight {
 	public static final String version = "1.0.0";
+	public static Object minecraftServer = null;
+	public static Object commandManager = null;
+	public static CustomClassLoader loader = null;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("FeatherWeight v" + FeatherWeight.version);
@@ -65,9 +68,11 @@ public class FeatherWeight {
 		
 		for (MethodNode method : (List<MethodNode>) loader.commandManagerClass.methods) {
 			Type[] args = Type.getArgumentTypes(method.desc);
+			Type ret = Type.getReturnType(method.desc);
 			if (args.length == 1 && args[0].getClassName().equals(baseCommandInterfaceName)) {
 				loader.addCommandMethod = method;
-				break;
+			} else if (ret.equals(Type.INT_TYPE) && args.length == 2 && args[0].getClassName().equals(commandEntityInterfaceName) && args[1].equals(Type.getType(String.class))) {
+				loader.executeCommandMethod = method;
 			}
 		}
 		
@@ -88,7 +93,7 @@ public class FeatherWeight {
 			} else if (args.length == 1 && args[0].getInternalName().equals(commandEntityInterfaceName) && ret.equals(Type.BOOLEAN_TYPE)) {
 				loader.hasPermissionMethod = method;
 			} else if (args.length == 2 && args[0].getInternalName().equals(commandEntityInterfaceName) && args[1].equals(Type.getType(String[].class)) && ret.equals(Type.VOID_TYPE)) {
-				loader.executeCommandMethod = method;
+				loader.handleExecuteMethod = method;
 			}
 		}
 	}
@@ -102,6 +107,8 @@ public class FeatherWeight {
 	}
 	
 	public static void bootstrap(Object minecraftServer) throws Exception {
+		FeatherWeight.loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
+		FeatherWeight.minecraftServer = minecraftServer;
 		Injection.injectServer(minecraftServer);
 	}
 }
