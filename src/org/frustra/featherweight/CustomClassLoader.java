@@ -19,6 +19,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -26,8 +27,18 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 public class CustomClassLoader extends URLClassLoader {
 	public HashMap<String, CustomClassNode> moddedClasses = new HashMap<String, CustomClassNode>();
+	public HashMap<String, CustomClassNode> commandClasses = new HashMap<String, CustomClassNode>();
 	public JarFile jarFile;
 	public File jarPath;
+
+	public CustomClassNode commandManagerClass = null;
+	public CustomClassNode baseCommandClass = null;
+	public CustomClassNode rconSessionClass = null;
+	public MethodNode addCommandMethod = null;
+	public FieldNode commandManagerField = null;
+	public MethodNode getCommandNameMethod = null;
+	public MethodNode hasPermissionMethod = null;
+	public MethodNode executeCommandMethod = null;
 	
 	public CustomClassLoader(File jarPath) throws IOException {
 		super(new URL[] {jarPath.toURI().toURL()});
@@ -80,8 +91,11 @@ public class CustomClassLoader extends URLClassLoader {
 	
 	public byte[] getClassBytes(String name) {
 		CustomClassNode node = moddedClasses.get(name);
+		if (node == null) node = commandClasses.get(name);
 		
-		if (node != null && doInjection(node)) {
+		if (node != null) {
+			doInjection(node);
+			
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			node.accept(writer);
 			
@@ -156,7 +170,7 @@ public class CustomClassLoader extends URLClassLoader {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean doInjection(CustomClassNode node) {
+	public void doInjection(CustomClassNode node) {
 		if (node.name.equals("net/minecraft/server/MinecraftServer")) {
 			for (MethodNode method : (List<MethodNode>) node.methods) {
 				if (method.name.equals("<init>")) {
@@ -167,8 +181,6 @@ public class CustomClassLoader extends URLClassLoader {
 					break;
 				}
 			}
-			return true;
 		}
-		return false;
 	}
 }
