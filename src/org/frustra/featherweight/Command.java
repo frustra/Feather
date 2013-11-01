@@ -2,6 +2,10 @@ package org.frustra.featherweight;
 
 import java.lang.reflect.Method;
 
+import org.frustra.featherweight.hooks.CommandManagerClass;
+import org.frustra.featherweight.hooks.ExecuteCommandMethod;
+import org.frustra.featherweight.hooks.HelpCommandClass;
+import org.frustra.featherweight.hooks.SendClientMessageMethod;
 import org.objectweb.asm.Type;
 
 public abstract class Command {
@@ -41,12 +45,12 @@ public abstract class Command {
 		try {
 			if (executeCommandMethod == null) {
 				CustomClassLoader loader = FeatherWeight.loader;
-				Type[] args = Type.getArgumentTypes(loader.executeCommandMethod.desc);
+				Type[] args = Type.getArgumentTypes(ExecuteCommandMethod.executeCommand.desc);
 
-				Class<?> commandManagerClass = loader.loadClass(loader.commandManagerClass.name.replace('/', '.'));
+				Class<?> commandManagerClass = loader.loadClass(CommandManagerClass.commandManager.name.replace('/', '.'));
 				Class<?> commandEntityClass = loader.loadClass(args[0].getClassName());
 
-				executeCommandMethod = commandManagerClass.getDeclaredMethod(loader.executeCommandMethod.name, new Class[] { commandEntityClass, String.class });
+				executeCommandMethod = commandManagerClass.getDeclaredMethod(ExecuteCommandMethod.executeCommand.name, new Class[] { commandEntityClass, String.class });
 				executeCommandMethod.setAccessible(true);
 			}
 			executeCommandMethod.invoke(FeatherWeight.commandManager, new Object[] { source, command });
@@ -76,12 +80,12 @@ public abstract class Command {
 		try {
 			if (sendClientMethod == null) {
 				CustomClassLoader loader = FeatherWeight.loader;
-				Type[] args = Type.getArgumentTypes(loader.sendClientMethod.desc);
+				Type[] args = Type.getArgumentTypes(SendClientMessageMethod.sendMessage.desc);
 
-				Class<?> baseCommandClass = loader.loadClass(loader.baseCommandClass.name.replace('/', '.'));
+				Class<?> baseCommandClass = loader.loadClass(HelpCommandClass.baseCommand.name.replace('/', '.'));
 				Class<?> commandEntityClass = loader.loadClass(args[0].getClassName());
 
-				sendClientMethod = baseCommandClass.getDeclaredMethod(loader.sendClientMethod.name, new Class[] { commandEntityClass, String.class, Object[].class });
+				sendClientMethod = baseCommandClass.getDeclaredMethod(SendClientMessageMethod.sendMessage.name, new Class[] { commandEntityClass, String.class, Object[].class });
 				sendClientMethod.setAccessible(true);
 			}
 			sendClientMethod.invoke(null, new Object[] { target, str, values });

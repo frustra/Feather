@@ -9,39 +9,22 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.objectweb.asm.ClassReader;
+import org.frustra.filament.hooking.CustomClassNode;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
 
 public class CustomClassLoader extends URLClassLoader {
-	public HashMap<String, CustomClassNode> moddedClasses = new HashMap<String, CustomClassNode>();
-	public HashMap<String, CustomClassNode> commandClasses = new HashMap<String, CustomClassNode>();
-	public JarFile jarFile;
-	public File jarPath;
-
-	public CustomClassNode commandManagerClass = null;
-	public CustomClassNode baseCommandClass = null;
-	public CustomClassNode commandEntityInterface = null;
-	public FieldNode commandManagerField = null;
-	public MethodNode addCommandMethod = null;
-	public MethodNode executeCommandMethod = null;
-	public MethodNode getCommandNameMethod = null;
-	public MethodNode hasPermissionMethod = null;
-	public MethodNode handleExecuteMethod = null;
-	public MethodNode sendClientMethod = null;
+	public Storage store;
+	private ClassLoader parent;
 
 	public CustomClassLoader(File jarPath) throws IOException {
 		super(new URL[] { jarPath.toURI().toURL() });
-		this.jarPath = jarPath;
-		this.jarFile = new JarFile(jarPath);
+		this.store = new Storage(this);
+		this.store.jarPath = jarPath;
+		this.store.jarFile = new JarFile(jarPath);
+		this.parent = CustomClassLoader.class.getClassLoader();
 	}
 
 	public Class<?> getPrimitiveType(String name) throws ClassNotFoundException {
@@ -79,7 +62,11 @@ public class CustomClassLoader extends URLClassLoader {
 				try {
 					return super.loadClass(name);
 				} catch (Exception e1) {
-					return getPrimitiveType(name);
+					try {
+						return parent.loadClass(name);
+					} catch (Exception e2) {
+						return getPrimitiveType(name);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -88,8 +75,7 @@ public class CustomClassLoader extends URLClassLoader {
 	}
 
 	public byte[] getClassBytes(String name) {
-		CustomClassNode node = moddedClasses.get(name);
-		if (node == null) node = commandClasses.get(name);
+		CustomClassNode node = store.filament.classes.get(name);
 
 		if (node != null) {
 			Injection.injectNode(node, this);
@@ -106,14 +92,30 @@ public class CustomClassLoader extends URLClassLoader {
 			byte[] buf = getClassBytes(name.substring(0, name.length() - 6).replace('/', '.'));
 			if (buf != null) return new ByteArrayInputStream(buf);
 		}
-		return super.getResourceAsStream(name);
+		InputStream stream = null;
+		try {
+			stream = super.getResourceAsStream(name);
+		} catch (Throwable e) {}
+		if (stream != null) return stream;
+		try {
+			stream = parent.getResourceAsStream(name);
+		} catch (Throwable e) {}
+		return stream;
 	}
 
 	public URL findResource(String name) {
 		byte[] buf = null;
 		if (name.endsWith(".class")) buf = getClassBytes(name.substring(0, name.length() - 6).replace('/', '.'));
+		URL url = null;
 		if (buf == null) {
-			return super.findResource(name);
+			try {
+				url = super.findResource(name);
+			} catch (Throwable e) {}
+			if (url != null) return url;
+			try {
+				url = parent.getResource(name);
+			} catch (Throwable e) {}
+			return url;
 		}
 		final InputStream stream = new ByteArrayInputStream(buf);
 		URLStreamHandler handler = new URLStreamHandler() {
@@ -132,38 +134,6 @@ public class CustomClassLoader extends URLClassLoader {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
-		}
-	}
-
-	public void loadJar() {
-		try {
-			moddedClasses.clear();
-			Enumeration<JarEntry> entries = jarFile.entries();
-			while (entries.hasMoreElements()) {
-				JarEntry entry = entries.nextElement();
-				if (entry != null && entry.getName().endsWith(".class")) {
-					CustomClassNode node = new CustomClassNode();
-					ClassReader reader = new ClassReader(jarFile.getInputStream(entry));
-					reader.accept(node, ClassReader.SKIP_DEBUG);
-					char[] buf = new char[reader.getMaxStringLength()];
-					for (int i = 0; i < reader.getItemCount(); i++) {
-						try {
-							Object constant = reader.readConst(i, buf);
-							if (constant instanceof String) {
-								node.constants.add((String) constant);
-							} else if (constant instanceof Type) {
-								node.references.add((Type) constant);
-							}
-						} catch (Exception e) {}
-					}
-					node.access &= ~(Opcodes.ACC_FINAL | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE);
-					node.access |= Opcodes.ACC_PUBLIC;
-					String name = node.name.replaceAll("/", ".");
-					moddedClasses.put(name, node);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }
