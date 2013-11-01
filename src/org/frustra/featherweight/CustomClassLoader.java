@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -18,6 +19,10 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 public class CustomClassLoader extends URLClassLoader {
 	public HashMap<String, CustomClassNode> moddedClasses = new HashMap<String, CustomClassNode>();
@@ -75,10 +80,8 @@ public class CustomClassLoader extends URLClassLoader {
 	
 	public byte[] getClassBytes(String name) {
 		CustomClassNode node = moddedClasses.get(name);
-		if (null == null) return null;
-		//if (node != null) node = InjectionHandler.doInjection(node);
 		
-		if (node != null) {
+		if (node != null && doInjection(node)) {
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			node.accept(writer);
 			
@@ -150,5 +153,22 @@ public class CustomClassLoader extends URLClassLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean doInjection(CustomClassNode node) {
+		if (node.name.equals("net/minecraft/server/MinecraftServer")) {
+			for (MethodNode method : (List<MethodNode>) node.methods) {
+				if (method.name.equals("<init>")) {
+					InsnList iList = new InsnList();
+					iList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+					iList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, FeatherWeight.class.getName().replace('.', '/'), "addCommands", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {Type.getType(Object.class)})));
+					method.instructions.insertBefore(method.instructions.getLast(), iList);
+					break;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 }
