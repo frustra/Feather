@@ -118,8 +118,7 @@ public class CustomClassLoader extends URLClassLoader {
 		URLStreamHandler handler = new URLStreamHandler() {
 			protected URLConnection openConnection(URL url) throws IOException {
 				return new URLConnection(url) {
-					public void connect() throws IOException {
-					}
+					public void connect() throws IOException {}
 
 					public InputStream getInputStream() {
 						return stream;
@@ -154,8 +153,7 @@ public class CustomClassLoader extends URLClassLoader {
 							} else if (constant instanceof Type) {
 								node.references.add((Type) constant);
 							}
-						} catch (Exception e) {
-						}
+						} catch (Exception e) {}
 					}
 					node.access &= ~(Opcodes.ACC_FINAL | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE);
 					node.access |= Opcodes.ACC_PUBLIC;

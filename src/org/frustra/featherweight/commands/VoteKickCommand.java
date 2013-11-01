@@ -3,20 +3,18 @@ package org.frustra.featherweight.commands;
 import org.frustra.featherweight.Command;
 import org.frustra.featherweight.Entity;
 
-public class TestCommand extends Command {
+public class VoteKickCommand extends Command {
 
 	public String getName() {
-		return "test";
+		return "votekick";
 	}
 
 	public void execute(Entity source, String[] arguments) {
-		System.out.println("test executed!");
-		for (String s : arguments) {
-			System.out.println(s);
+		if (arguments.length == 1) {
+			Command.execute("kick " + arguments[0]);
+		} else {
+			// TODO throw a ch
 		}
-
-		System.out.println("name: " + source.getName());
-		Command.execute("kick " + source.getName());
 	}
 
 	public boolean hasPermission(Entity source) {
