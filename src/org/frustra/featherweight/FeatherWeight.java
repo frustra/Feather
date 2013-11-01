@@ -13,6 +13,8 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.sun.xml.internal.ws.org.objectweb.asm.Opcodes;
+
 public class FeatherWeight {
 	public static final String version = "1.0.0";
 	public static Object minecraftServer = null;
@@ -96,6 +98,17 @@ public class FeatherWeight {
 				loader.hasPermissionMethod = method;
 			} else if (args.length == 2 && args[0].getInternalName().equals(commandEntityInterfaceName) && args[1].equals(Type.getType(String[].class)) && ret.equals(Type.VOID_TYPE)) {
 				loader.handleExecuteMethod = method;
+			}
+		}
+
+		for (MethodNode method : (List<MethodNode>) loader.baseCommandClass.methods) {
+			Type[] args = Type.getArgumentTypes(method.desc);
+			Type ret = Type.getReturnType(method.desc);
+			if ((method.access & Opcodes.ACC_STATIC) != 0 && ret.equals(Type.VOID_TYPE) && args.length == 3) {
+				if (args[0].getClassName().equals(commandEntityInterfaceName) && args[1].equals(Type.getType(String.class)) && args[2].equals(Type.getType(Object[].class))) {
+					loader.sendClientMethod = method;
+					break;
+				}
 			}
 		}
 	}

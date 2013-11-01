@@ -36,6 +36,7 @@ public class CustomClassLoader extends URLClassLoader {
 	public MethodNode getCommandNameMethod = null;
 	public MethodNode hasPermissionMethod = null;
 	public MethodNode handleExecuteMethod = null;
+	public MethodNode sendClientMethod = null;
 
 	public CustomClassLoader(File jarPath) throws IOException {
 		super(new URL[] { jarPath.toURI().toURL() });

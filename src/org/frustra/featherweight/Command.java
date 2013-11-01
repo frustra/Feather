@@ -41,9 +41,12 @@ public abstract class Command {
 		try {
 			if (executeCommandMethod == null) {
 				CustomClassLoader loader = FeatherWeight.loader;
-				Class<?> commandManagerClass = loader.loadClass(loader.commandManagerClass.name.replace('/', '.'));
 				Type[] args = Type.getArgumentTypes(loader.executeCommandMethod.desc);
-				executeCommandMethod = commandManagerClass.getDeclaredMethod(loader.executeCommandMethod.name, loader.loadClass(args[0].getClassName()), String.class);
+
+				Class<?> commandManagerClass = loader.loadClass(loader.commandManagerClass.name.replace('/', '.'));
+				Class<?> commandEntityClass = loader.loadClass(args[0].getClassName());
+
+				executeCommandMethod = commandManagerClass.getDeclaredMethod(loader.executeCommandMethod.name, new Class[] { commandEntityClass, String.class });
 				executeCommandMethod.setAccessible(true);
 			}
 			executeCommandMethod.invoke(FeatherWeight.commandManager, new Object[] { source, command });
@@ -52,5 +55,41 @@ public abstract class Command {
 		}
 	}
 
+	/**
+	 * Sends some output to the server log
+	 * 
+	 * @param a
+	 * @param b
+	 */
+	public static void log(String a, Object[] b) {
+		respond(FeatherWeight.minecraftServer, a, b);
+	}
+
+	/**
+	 * Sends some output to a particular target entity
+	 * 
+	 * @param target
+	 * @param a
+	 * @param b
+	 */
+	public static void respond(Object target, String a, Object[] b) {
+		try {
+			if (sendClientMethod == null) {
+				CustomClassLoader loader = FeatherWeight.loader;
+				Type[] args = Type.getArgumentTypes(loader.sendClientMethod.desc);
+
+				Class<?> baseCommandClass = loader.loadClass(loader.baseCommandClass.name.replace('/', '.'));
+				Class<?> commandEntityClass = loader.loadClass(args[0].getClassName());
+
+				sendClientMethod = baseCommandClass.getDeclaredMethod(loader.sendClientMethod.name, new Class[] { commandEntityClass, String.class, Object[].class });
+				sendClientMethod.setAccessible(true);
+			}
+			sendClientMethod.invoke(null, new Object[] { target, a, b });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static Method executeCommandMethod = null;
+	private static Method sendClientMethod = null;
 }
