@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.frustra.featherweight.commands.TestCommand;
+import org.frustra.featherweight.commands.VoteKickCommand;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
@@ -32,7 +33,10 @@ public class FeatherWeight {
 		loader.loadJar();
 		loadHooks(loader);
 
-		Class<?>[] commands = new Class<?>[] { TestCommand.class };
+		Class<?>[] commands = new Class<?>[] {
+			TestCommand.class,
+			VoteKickCommand.class
+		};
 		for (Class<?> cls : commands) {
 			loader.commandClasses.put(cls.getName(), loadOwnClass(cls.getName()));
 		}
