@@ -1,1 +1,8 @@
-*.class
+/bin
+/lib/minecraft_server.jar
+/logs
+/world
+/ops.txt
+/server.properties
+/white-list.txt
+/banned-*.txt
