@@ -70,6 +70,7 @@ public class FeatherWeight {
 	}
 	
 	public static void addCommands(Object minecraftServer) {
+		
 		System.out.println(minecraftServer.getClass().getName());
 	}
 }
