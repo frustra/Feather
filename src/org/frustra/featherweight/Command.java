@@ -5,7 +5,6 @@ public abstract class Command {
 	 * @return the command's name, as used by a player
 	 */
 	public abstract String getName();
-	public abstract boolean a(Object source);
 
 	/**
 	 * @param source the entity that invoked the command
