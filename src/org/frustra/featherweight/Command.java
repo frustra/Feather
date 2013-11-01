@@ -56,23 +56,23 @@ public abstract class Command {
 	}
 
 	/**
-	 * Sends some output to the server log
+	 * Sends some output to the server log.
 	 * 
-	 * @param a
-	 * @param b
+	 * @param str the format string
+	 * @param values the list of values to interpolate
 	 */
-	public static void log(String a, Object[] b) {
-		respond(FeatherWeight.minecraftServer, a, b);
+	public static void log(String str, Object[] values) {
+		respond(FeatherWeight.minecraftServer, str, values);
 	}
 
 	/**
-	 * Sends some output to a particular target entity
+	 * Sends some output to a particular target internal entity
 	 * 
 	 * @param target
-	 * @param a
-	 * @param b
+	 * @param str the format string
+	 * @param values the list of values to interpolate
 	 */
-	public static void respond(Object target, String a, Object[] b) {
+	public static void respond(Object target, String str, Object[] values) {
 		try {
 			if (sendClientMethod == null) {
 				CustomClassLoader loader = FeatherWeight.loader;
@@ -84,7 +84,7 @@ public abstract class Command {
 				sendClientMethod = baseCommandClass.getDeclaredMethod(loader.sendClientMethod.name, new Class[] { commandEntityClass, String.class, Object[].class });
 				sendClientMethod.setAccessible(true);
 			}
-			sendClientMethod.invoke(null, new Object[] { target, a, b });
+			sendClientMethod.invoke(null, new Object[] { target, str, values });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

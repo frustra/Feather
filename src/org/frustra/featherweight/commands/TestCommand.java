@@ -11,14 +11,14 @@ public class TestCommand extends Command {
 
 	public void execute(Entity source, String[] arguments) {
 		System.out.println("test executed!");
-		Command.respond(source.entity, "your message was received!", new Object[] { "bar", "baz" });
+		source.respond("your message was received, %s!", new Object[] { source.getName() });
 
 		for (String s : arguments) {
 			System.out.println(s);
 		}
 
 		System.out.println("name: " + source.getName());
-		Command.execute("kick " + source.getName());
+		//Command.execute("kick " + source.getName());
 	}
 
 	public boolean hasPermission(Entity source) {

@@ -18,4 +18,14 @@ public class Entity {
 		// Dynamically generated method
 		return null;
 	}
+
+	/**
+	 * Sends some output to this entity
+	 * 
+	 * @param str the format string
+	 * @param values the list of values to interpolate
+	 */
+	public void respond(String str, Object[] values) {
+		Command.respond(this.entity, str, values);
+	}
 }
