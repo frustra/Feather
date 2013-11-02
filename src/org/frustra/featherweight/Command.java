@@ -11,6 +11,11 @@ import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ReplaceSuperClass;
 import org.objectweb.asm.Type;
 
+/**
+ * The base class for every command. It gets dynamically rewritten to extend the
+ * internal Minecraft command class, and proxies Minecraft's internal methods to
+ * our own commands.
+ */
 @ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
 public abstract class Command {
 	@ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
@@ -22,36 +27,44 @@ public abstract class Command {
 	}
 
 	/**
-	 * @return the command's name, as used by a player
+	 * Gets the base name of the command, as it would be invoked by an entity.
+	 * 
+	 * @return the command's name
 	 */
 	public abstract String getName();
 
 	/**
+	 * Whether a particular entity has access to this command or not.
+	 * 
 	 * @param source the entity that invoked the command
-	 * @return whether to allow execution of the command or not
+	 * @return the accessibility of the command
 	 */
 	public abstract boolean hasPermission(Entity source);
 
 	/**
+	 * Called when a particular entity has invoked this command. Permissions
+	 * will have already been checked.
+	 * 
 	 * @param source the entity that invoked the command
 	 * @param arguments any arguments given by the player, split by spaces
 	 */
 	public abstract void execute(Entity source, String[] arguments);
 
 	/**
-	 * Executes a command string as the server
+	 * Executes a command string as the server.
 	 * 
-	 * @param command
+	 * @param command the command string
 	 */
 	public static void execute(String command) {
 		execute(FeatherWeight.minecraftServer, command);
 	}
 
 	/**
-	 * Executes a command string as a particular source
+	 * Executes a command string as if it were run by a particular source
+	 * entity.
 	 * 
-	 * @param source
-	 * @param command
+	 * @param source the proxied entity source
+	 * @param command the command string
 	 */
 	public static void execute(Object source, String command) {
 		try {
@@ -72,7 +85,7 @@ public abstract class Command {
 	}
 
 	/**
-	 * Sends some output to the server log.
+	 * Sends some text to the server log.
 	 * 
 	 * @param str the format string
 	 * @param values the list of values to interpolate
@@ -82,9 +95,9 @@ public abstract class Command {
 	}
 
 	/**
-	 * Sends some output to a particular target internal entity
+	 * Sends some text to a particular target internal entity.
 	 * 
-	 * @param target
+	 * @param target the proxied entity target
 	 * @param str the format string
 	 * @param values the list of values to interpolate
 	 */

@@ -33,6 +33,7 @@ public class FeatherWeight {
 	public static Object minecraftServer = null;
 	public static Object commandManager = null;
 	public static CustomClassLoader loader = null;
+	public static Server server = null;
 
 	public static final Class<?>[] hooks = new Class<?>[] {
 		AddCommandMethod.class,
@@ -82,14 +83,6 @@ public class FeatherWeight {
 		HookingHandler.loadHooks(hooks);
 		InjectionHandler.loadInjectors(injectors);
 
-		Database.init();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("FeatherWeight shutting down");
-				Database.close();
-			}
-		});
-
 		Class<?> cls = loader.loadClass("net.minecraft.server.MinecraftServer");
 		Method entryPoint = cls.getDeclaredMethod("main", new Class[] { String[].class });
 		entryPoint.setAccessible(true);
@@ -106,6 +99,14 @@ public class FeatherWeight {
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
+
+		FeatherWeight.server = new Server();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("FeatherWeight shutting down");
+				FeatherWeight.server.shutdown();
+			}
+		});
 
 		HookingHandler.doHooking();
 
