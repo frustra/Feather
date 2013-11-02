@@ -1,27 +1,20 @@
 package org.frustra.featherweight;
 
-import java.lang.reflect.Method;
-
-import org.frustra.featherweight.hooks.CommandManagerClass;
-import org.frustra.featherweight.hooks.ExecuteCommandMethod;
-import org.frustra.featherweight.hooks.GetCommandNameMethod;
-import org.frustra.featherweight.hooks.HelpCommandClass;
-import org.frustra.featherweight.hooks.SendClientMessageMethod;
 import org.frustra.filament.injection.annotations.OverrideMethod;
+import org.frustra.filament.injection.annotations.ProxyMethod;
 import org.frustra.filament.injection.annotations.ReplaceSuperClass;
-import org.objectweb.asm.Type;
 
 /**
  * The base class for every command. It gets dynamically rewritten to extend the
  * internal Minecraft command class, and proxies Minecraft's internal methods to
  * our own commands.
  */
-@ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
+@ReplaceSuperClass("HelpCommandClass.baseCommand")
 public abstract class Command {
-	@ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
+	@ReplaceSuperClass("HelpCommandClass.baseCommand")
 	public Command() {}
 
-	@OverrideMethod(hook = GetCommandNameMethod.class, field = "getName")
+	@OverrideMethod("GetCommandNameMethod.getName")
 	private String getNameI() {
 		return this.getName();
 	}
@@ -59,6 +52,12 @@ public abstract class Command {
 		execute(FeatherWeight.minecraftServer, command);
 	}
 
+	@ProxyMethod(
+		classHook = "CommandManagerClass.commandManager",
+		methodHook = "ExecuteCommandMethod.executeCommand"
+	)
+	private static native int executeI(Object instance, Object source, String command);
+
 	/**
 	 * Executes a command string as if it were run by a particular source
 	 * entity.
@@ -67,21 +66,7 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(Object source, String command) {
-		try {
-			if (executeCommandMethod == null) {
-				CustomClassLoader loader = FeatherWeight.loader;
-				Type[] args = Type.getArgumentTypes(ExecuteCommandMethod.executeCommand.desc);
-
-				Class<?> commandManagerClass = loader.loadClass(CommandManagerClass.commandManager.name.replace('/', '.'));
-				Class<?> commandEntityClass = loader.loadClass(args[0].getClassName());
-
-				executeCommandMethod = commandManagerClass.getDeclaredMethod(ExecuteCommandMethod.executeCommand.name, new Class[] { commandEntityClass, String.class });
-				executeCommandMethod.setAccessible(true);
-			}
-			executeCommandMethod.invoke(FeatherWeight.commandManager, new Object[] { source, command });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		executeI(FeatherWeight.commandManager, (Command) source, command);
 	}
 
 	/**
@@ -94,6 +79,12 @@ public abstract class Command {
 		respond(FeatherWeight.minecraftServer, str, values);
 	}
 
+	@ProxyMethod(
+		classHook = "HelpCommandClass.baseCommand",
+		methodHook = "SendClientMessageMethod.sendMessage"
+	)
+	private static native void respondI(Object target, String str, Object[] values);
+
 	/**
 	 * Sends some text to a particular target internal entity.
 	 * 
@@ -102,23 +93,6 @@ public abstract class Command {
 	 * @param values the list of values to interpolate
 	 */
 	public static void respond(Object target, String str, Object[] values) {
-		try {
-			if (sendClientMethod == null) {
-				CustomClassLoader loader = FeatherWeight.loader;
-				Type[] args = Type.getArgumentTypes(SendClientMessageMethod.sendMessage.desc);
-
-				Class<?> baseCommandClass = loader.loadClass(HelpCommandClass.baseCommand.name.replace('/', '.'));
-				Class<?> commandEntityClass = loader.loadClass(args[0].getClassName());
-
-				sendClientMethod = baseCommandClass.getDeclaredMethod(SendClientMessageMethod.sendMessage.name, new Class[] { commandEntityClass, String.class, Object[].class });
-				sendClientMethod.setAccessible(true);
-			}
-			sendClientMethod.invoke(null, new Object[] { target, str, values });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		respondI(target, str, values);
 	}
-
-	private static Method executeCommandMethod = null;
-	private static Method sendClientMethod = null;
 }
