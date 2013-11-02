@@ -1,4 +1,4 @@
-package org.frustra.featherweight;
+package org.frustra.feather;
 
 import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ProxyMethod;

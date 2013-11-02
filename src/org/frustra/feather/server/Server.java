@@ -1,4 +1,4 @@
-package org.frustra.featherweight.server;
+package org.frustra.feather.server;
 
 import java.util.HashMap;
 

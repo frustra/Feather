@@ -1,10 +1,10 @@
-package org.frustra.featherweight.commands;
+package org.frustra.feather.commands;
 
-import org.frustra.featherweight.Command;
-import org.frustra.featherweight.Entity;
-import org.frustra.featherweight.FeatherWeight;
-import org.frustra.featherweight.server.KickVote;
-import org.frustra.featherweight.server.Player;
+import org.frustra.feather.Command;
+import org.frustra.feather.Entity;
+import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.server.KickVote;
+import org.frustra.feather.server.Player;
 
 public class VoteKickCommand extends Command {
 

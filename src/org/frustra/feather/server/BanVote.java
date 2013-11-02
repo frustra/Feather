@@ -1,4 +1,4 @@
-package org.frustra.featherweight.server;
+package org.frustra.feather.server;
 
 public class BanVote extends Vote {
 	public static final long Threshold = 2000;

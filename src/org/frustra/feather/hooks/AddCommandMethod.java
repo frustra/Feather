@@ -1,34 +1,33 @@
-package org.frustra.featherweight.hooks;
+package org.frustra.feather.hooks;
 
-import org.frustra.featherweight.FeatherWeight;
+import org.frustra.feather.FeatherWeight;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.MethodHook;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
-public class GetCommandNameMethod extends MethodHook implements HookingPassTwo {
-	public static MethodNode getName = null;
+public class AddCommandMethod extends MethodHook implements HookingPassTwo {
+	public static MethodNode addCommand = null;
 
 	public boolean match(CustomClassNode node) {
-		return node.equals(HelpCommandClass.baseCommandInterface);
+		return node.equals(CommandManagerClass.commandManager);
 	}
 
 	public boolean match(CustomClassNode node, MethodNode m) {
 		Type[] args = Type.getArgumentTypes(m.desc);
-		Type ret = Type.getReturnType(m.desc);
-		return args.length == 0 && ret.equals(Type.getType(String.class));
+		return args.length == 1 && args[0].getInternalName().equals(HelpCommandClass.baseCommandInterface.name);
 	}
 
 	public void reset() {
 		super.reset();
-		getName = null;
+		addCommand = null;
 	}
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
-		getName = m;
+		addCommand = m;
 		if (FeatherWeight.debug) {
-			System.out.println("Get Command Name Method: " + getName.name + getName.desc);
+			System.out.println("Add Command Method: " + addCommand.name + addCommand.desc);
 		}
 	}
 }

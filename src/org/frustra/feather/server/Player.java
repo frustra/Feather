@@ -1,4 +1,4 @@
-package org.frustra.featherweight.server;
+package org.frustra.feather.server;
 
 public class Player {
 	public long karma = 0;

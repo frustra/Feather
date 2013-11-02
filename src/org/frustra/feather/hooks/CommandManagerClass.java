@@ -1,6 +1,6 @@
-package org.frustra.featherweight.hooks;
+package org.frustra.feather.hooks;
 
-import org.frustra.featherweight.FeatherWeight;
+import org.frustra.feather.FeatherWeight;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.ClassHook;
 import org.frustra.filament.hooking.types.HookingPassOne;

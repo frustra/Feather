@@ -1,6 +1,6 @@
-package org.frustra.featherweight;
+package org.frustra.feather;
 
-import org.frustra.featherweight.server.Player;
+import org.frustra.feather.server.Player;
 
 /**
  * Represents an entity that can issue commands. This is a helper class, which

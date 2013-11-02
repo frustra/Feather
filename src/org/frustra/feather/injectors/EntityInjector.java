@@ -1,9 +1,9 @@
-package org.frustra.featherweight.injectors;
+package org.frustra.feather.injectors;
 
 import java.util.List;
 
-import org.frustra.featherweight.Entity;
-import org.frustra.featherweight.hooks.RconEntityClass;
+import org.frustra.feather.Entity;
+import org.frustra.feather.hooks.RconEntityClass;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.injection.ClassInjector;
 import org.objectweb.asm.Opcodes;

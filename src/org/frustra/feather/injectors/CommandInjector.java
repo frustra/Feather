@@ -1,8 +1,8 @@
-package org.frustra.featherweight.injectors;
+package org.frustra.feather.injectors;
 
-import org.frustra.featherweight.Entity;
-import org.frustra.featherweight.hooks.HandleExecuteCommandMethod;
-import org.frustra.featherweight.hooks.HasCommandPermissionMethod;
+import org.frustra.feather.Entity;
+import org.frustra.feather.hooks.HandleExecuteCommandMethod;
+import org.frustra.feather.hooks.HasCommandPermissionMethod;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.injection.ClassInjector;
 import org.objectweb.asm.Opcodes;

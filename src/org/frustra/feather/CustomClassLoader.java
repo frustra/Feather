@@ -1,4 +1,4 @@
-package org.frustra.featherweight;
+package org.frustra.feather;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

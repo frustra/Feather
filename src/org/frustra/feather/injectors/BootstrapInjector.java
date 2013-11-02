@@ -1,8 +1,8 @@
-package org.frustra.featherweight.injectors;
+package org.frustra.feather.injectors;
 
 import java.util.List;
 
-import org.frustra.featherweight.FeatherWeight;
+import org.frustra.feather.FeatherWeight;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.injection.ClassInjector;
 import org.objectweb.asm.Opcodes;

@@ -1,7 +1,7 @@
-package org.frustra.featherweight.commands;
+package org.frustra.feather.commands;
 
-import org.frustra.featherweight.Command;
-import org.frustra.featherweight.Entity;
+import org.frustra.feather.Command;
+import org.frustra.feather.Entity;
 
 public class TestCommand extends Command {
 
