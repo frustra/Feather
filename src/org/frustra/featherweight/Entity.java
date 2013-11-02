@@ -20,12 +20,30 @@ public class Entity {
 	}
 
 	/**
-	 * Sends some output to this entity
+	 * Sends some text to this entity
+	 * 
+	 * @param str the text to send
+	 */
+	public void respond(String str) {
+		respond(str, new Object[0]);
+	}
+
+	/**
+	 * Sends some text to this entity
 	 * 
 	 * @param str the format string
 	 * @param values the list of values to interpolate
 	 */
 	public void respond(String str, Object[] values) {
 		Command.respond(this.entity, str, values);
+	}
+
+	/**
+	 * Gets the Player this entity represents, if it is a player
+	 * 
+	 * @return the player instance
+	 */
+	public Player getPlayer() {
+		return FeatherWeight.server.getPlayer(this.getName());
 	}
 }

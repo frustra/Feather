@@ -13,4 +13,8 @@ public class Player {
 	public long seen() {
 		return this.lastSeen = System.currentTimeMillis() / 1000;
 	}
+
+	public int hashCode() {
+		return this.name.hashCode();
+	}
 }
