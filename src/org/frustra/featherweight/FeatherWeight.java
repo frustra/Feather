@@ -3,6 +3,7 @@ package org.frustra.featherweight;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.frustra.featherweight.commands.TestCommand;
@@ -17,7 +18,7 @@ import org.frustra.featherweight.hooks.HelpCommandClass;
 import org.frustra.featherweight.hooks.MinecraftServerClass;
 import org.frustra.featherweight.hooks.RconEntityClass;
 import org.frustra.featherweight.hooks.SendClientMessageMethod;
-import org.frustra.filament.FilamentStorage;
+import org.frustra.featherweight.injectors.CommandInjector;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;
@@ -45,13 +46,12 @@ public class FeatherWeight {
 	};
 	
 	public static final Class<?>[] injectors = new Class<?>[] {
-			
+		CommandInjector.class
 	};
 	
-	public static final Class<?>[] mods = new Class<?>[] {
+	public static final Class<?>[] commands = new Class<?>[] {
 		TestCommand.class,
-		VoteKickCommand.class,
-		Entity.class
+		VoteKickCommand.class
 	};
 
 	public static void main(String[] args) throws Exception {
@@ -64,12 +64,15 @@ public class FeatherWeight {
 			return;
 		}
 
-		CustomClassLoader loader = new CustomClassLoader(minecraftServer);
+		FeatherWeight.loader = new CustomClassLoader(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
 		HookingHandler.loadJar(loader.store.jarFile);
-		for (Class<?> cls : mods) {
-			loader.store.filament.classes.put(cls.getName(), loadOwnClass(cls.getName()));
+		loadOwnClass(Command.class.getName());
+		loadOwnClass(Entity.class.getName());
+		
+		for (Class<?> command : commands) {
+			loadOwnClass(command.getName());
 		}
 		
 		HookingHandler.loadHooks(hooks);
@@ -81,23 +84,27 @@ public class FeatherWeight {
 		entryPoint.invoke(null, new Object[] { args });
 	}
 
-	public static CustomClassNode loadOwnClass(String name) throws IOException {
+	public static void loadOwnClass(String name) throws IOException {
 		InputStream classStream = FeatherWeight.class.getResourceAsStream("/" + name.replace('.', '/') + ".class");
 		CustomClassNode node = new CustomClassNode();
 		ClassReader reader = new ClassReader(classStream);
 		reader.accept(node, 0);
-		return node;
+		FeatherWeight.loader.store.filament.classes.put(name, node);
 	}
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
-		FeatherWeight.loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
-		if (FilamentStorage.store == null) {
-			System.out.println("Set storage");
-			FilamentStorage.store = FeatherWeight.loader.store.filament;
-		}
+		loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
+		
 		HookingHandler.doHooking();
 		
+		Field commandManagerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, MinecraftServerClass.commandManager);
+		FeatherWeight.commandManager = commandManagerField.get(minecraftServer);
 		FeatherWeight.minecraftServer = minecraftServer;
-		Injection.injectServer(minecraftServer);
+
+		Method addCommandMethod = HookingHandler.lookupMethod(CommandManagerClass.commandManager, AddCommandMethod.addCommand);
+		for (Class<?> cls : commands) {
+			Class<?> cls2 = loader.loadClass(cls.getName());
+			addCommandMethod.invoke(FeatherWeight.commandManager, cls2.newInstance());
+		}
 	}
 }

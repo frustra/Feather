@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.jar.JarFile;
 
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.injection.InjectionHandler;
 import org.objectweb.asm.ClassWriter;
 
 public class CustomClassLoader extends URLClassLoader {
@@ -79,6 +80,7 @@ public class CustomClassLoader extends URLClassLoader {
 
 		if (node != null) {
 			Injection.injectNode(node, this);
+			InjectionHandler.doInjection(node);
 
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			node.accept(writer);

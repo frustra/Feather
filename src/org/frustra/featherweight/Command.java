@@ -4,11 +4,23 @@ import java.lang.reflect.Method;
 
 import org.frustra.featherweight.hooks.CommandManagerClass;
 import org.frustra.featherweight.hooks.ExecuteCommandMethod;
+import org.frustra.featherweight.hooks.GetCommandNameMethod;
 import org.frustra.featherweight.hooks.HelpCommandClass;
 import org.frustra.featherweight.hooks.SendClientMessageMethod;
+import org.frustra.filament.injection.annotations.OverrideMethod;
+import org.frustra.filament.injection.annotations.ReplaceSuperClass;
 import org.objectweb.asm.Type;
 
+@ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
 public abstract class Command {
+	@ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
+	public Command() {}
+	
+	@OverrideMethod(hook = GetCommandNameMethod.class, field = "getName")
+	private String getNameI() {
+		return this.getName();
+	}
+	
 	/**
 	 * @return the command's name, as used by a player
 	 */
