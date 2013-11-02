@@ -82,6 +82,14 @@ public class FeatherWeight {
 		HookingHandler.loadHooks(hooks);
 		InjectionHandler.loadInjectors(injectors);
 
+		Database.init();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("FeatherWeight shutting down");
+				Database.close();
+			}
+		});
+
 		Class<?> cls = loader.loadClass("net.minecraft.server.MinecraftServer");
 		Method entryPoint = cls.getDeclaredMethod("main", new Class[] { String[].class });
 		entryPoint.setAccessible(true);
