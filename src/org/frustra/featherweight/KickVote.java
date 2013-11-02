@@ -1,11 +1,11 @@
 package org.frustra.featherweight;
 
 public class KickVote extends Vote {
-	public static final long threshold = 1000;
+	public static final long Threshold = 1000;
 	public Player target;
 
 	public KickVote(Player target) {
-		super(KickVote.threshold);
+		super(KickVote.Threshold);
 		this.target = target;
 	}
 }
