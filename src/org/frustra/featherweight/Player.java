@@ -18,7 +18,10 @@ public class Player {
 		return this.name.hashCode();
 	}
 
-	public boolean equals(Player other) {
-		return name.equals(other.name);
+	public boolean equals(Object other) {
+		if (other instanceof Player) {
+			return name.equals(((Player) other).name);
+		}
+		return false;
 	}
 }
