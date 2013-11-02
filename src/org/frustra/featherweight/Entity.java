@@ -1,5 +1,7 @@
 package org.frustra.featherweight;
 
+import org.frustra.featherweight.server.Player;
+
 /**
  * Represents an entity that can issue commands. This is a helper class, which
  * wraps the underlying game entity and proxies methods dynamically.

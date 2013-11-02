@@ -3,8 +3,8 @@ package org.frustra.featherweight.commands;
 import org.frustra.featherweight.Command;
 import org.frustra.featherweight.Entity;
 import org.frustra.featherweight.FeatherWeight;
-import org.frustra.featherweight.KickVote;
-import org.frustra.featherweight.Player;
+import org.frustra.featherweight.server.KickVote;
+import org.frustra.featherweight.server.Player;
 
 public class VoteKickCommand extends Command {
 
@@ -14,16 +14,18 @@ public class VoteKickCommand extends Command {
 
 	public void execute(Entity source, String[] arguments) {
 		if (arguments.length == 1) {
+			Player sourcePlayer = source.getPlayer();
+			if (sourcePlayer.karma <= 0) {
+				source.respond("Not enough karma!");
+				return;
+			}
+
 			Player target = FeatherWeight.server.getPlayer(arguments[1]);
 			KickVote vote = FeatherWeight.server.activeKickVotes.get(target);
 			if (vote == null) {
-				if (source.getPlayer().karma > 0) {
-					vote = FeatherWeight.server.activeKickVotes.put(target, new KickVote(target));
-				} else {
-					source.respond("Not enough karma!");
-					return;
-				}
+				vote = FeatherWeight.server.activeKickVotes.put(target, new KickVote(target));
 			}
+
 			if (vote.addVote(source.getPlayer())) {
 				Command.execute("kick " + target.name);
 			} else {

@@ -1,4 +1,5 @@
-package org.frustra.featherweight;
+package org.frustra.featherweight.server;
+
 
 public class KickVote extends Vote {
 	public static final long Threshold = 1000;

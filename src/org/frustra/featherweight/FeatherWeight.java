@@ -21,6 +21,7 @@ import org.frustra.featherweight.hooks.SendClientMessageMethod;
 import org.frustra.featherweight.injectors.BootstrapInjector;
 import org.frustra.featherweight.injectors.CommandInjector;
 import org.frustra.featherweight.injectors.EntityInjector;
+import org.frustra.featherweight.server.Server;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;

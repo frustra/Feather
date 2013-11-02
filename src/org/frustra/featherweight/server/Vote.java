@@ -1,4 +1,4 @@
-package org.frustra.featherweight;
+package org.frustra.featherweight.server;
 
 import java.util.HashSet;
 import java.util.Set;
