@@ -1,7 +1,9 @@
-package org.frustra.feather.server;
+package org.frustra.feather.voting;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.frustra.feather.server.Player;
 
 public class Vote {
 	public long score = 0, threshold;

@@ -2,6 +2,9 @@ package org.frustra.feather.server;
 
 import java.util.HashMap;
 
+import org.frustra.feather.voting.BanVote;
+import org.frustra.feather.voting.KickVote;
+
 public class Server {
 	private Database db;
 

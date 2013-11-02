@@ -3,8 +3,8 @@ package org.frustra.feather.commands;
 import org.frustra.feather.Command;
 import org.frustra.feather.Entity;
 import org.frustra.feather.Feather;
-import org.frustra.feather.server.KickVote;
 import org.frustra.feather.server.Player;
+import org.frustra.feather.voting.KickVote;
 
 public class VoteKickCommand extends Command {
 

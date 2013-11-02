@@ -1,4 +1,6 @@
-package org.frustra.feather.server;
+package org.frustra.feather.voting;
+
+import org.frustra.feather.server.Player;
 
 
 public class KickVote extends Vote {
