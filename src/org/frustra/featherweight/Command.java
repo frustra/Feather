@@ -15,12 +15,12 @@ import org.objectweb.asm.Type;
 public abstract class Command {
 	@ReplaceSuperClass(hook = HelpCommandClass.class, field = "baseCommand")
 	public Command() {}
-	
+
 	@OverrideMethod(hook = GetCommandNameMethod.class, field = "getName")
 	private String getNameI() {
 		return this.getName();
 	}
-	
+
 	/**
 	 * @return the command's name, as used by a player
 	 */

@@ -10,21 +10,21 @@ import org.objectweb.asm.tree.FieldNode;
 public class MinecraftServerClass extends FieldHook implements HookingPassTwo {
 	public static CustomClassNode minecraftServer = null;
 	public static FieldNode commandManager = null;
-	
+
 	public boolean match(CustomClassNode node) {
 		return node.name.endsWith("MinecraftServer");
 	}
-	
+
 	public boolean match(CustomClassNode node, FieldNode f) {
 		return Type.getType(f.desc).getClassName().equals(CommandManagerClass.commandManagerInterface);
 	}
-	
+
 	public void reset() {
 		super.reset();
 		minecraftServer = null;
 		commandManager = null;
 	}
-	
+
 	public void onComplete(CustomClassNode node, FieldNode f) {
 		minecraftServer = node;
 		commandManager = f;

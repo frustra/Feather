@@ -79,7 +79,6 @@ public class CustomClassLoader extends URLClassLoader {
 		CustomClassNode node = store.filament.classes.get(name);
 
 		if (node != null) {
-			Injection.injectNode(node, this);
 			InjectionHandler.doInjection(node);
 
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);

@@ -9,22 +9,22 @@ import org.objectweb.asm.tree.MethodNode;
 
 public class GetCommandNameMethod extends MethodHook implements HookingPassTwo {
 	public static MethodNode getName = null;
-	
+
 	public boolean match(CustomClassNode node) {
 		return node.equals(HelpCommandClass.baseCommandInterface);
 	}
-	
+
 	public boolean match(CustomClassNode node, MethodNode m) {
 		Type[] args = Type.getArgumentTypes(m.desc);
 		Type ret = Type.getReturnType(m.desc);
 		return args.length == 0 && ret.equals(Type.getType(String.class));
 	}
-	
+
 	public void reset() {
 		super.reset();
 		getName = null;
 	}
-	
+
 	public void onComplete(CustomClassNode node, MethodNode m) {
 		getName = m;
 		if (FeatherWeight.debug) {

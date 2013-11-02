@@ -18,7 +18,9 @@ import org.frustra.featherweight.hooks.HelpCommandClass;
 import org.frustra.featherweight.hooks.MinecraftServerClass;
 import org.frustra.featherweight.hooks.RconEntityClass;
 import org.frustra.featherweight.hooks.SendClientMessageMethod;
+import org.frustra.featherweight.injectors.BootstrapInjector;
 import org.frustra.featherweight.injectors.CommandInjector;
+import org.frustra.featherweight.injectors.EntityInjector;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;
@@ -27,11 +29,11 @@ import org.objectweb.asm.ClassReader;
 public class FeatherWeight {
 	public static final String version = "1.0.0";
 	public static final boolean debug = true;
-	
+
 	public static Object minecraftServer = null;
 	public static Object commandManager = null;
 	public static CustomClassLoader loader = null;
-	
+
 	public static final Class<?>[] hooks = new Class<?>[] {
 		AddCommandMethod.class,
 		CommandManagerClass.class,
@@ -44,11 +46,13 @@ public class FeatherWeight {
 		RconEntityClass.class,
 		SendClientMessageMethod.class
 	};
-	
+
 	public static final Class<?>[] injectors = new Class<?>[] {
-		CommandInjector.class
+		BootstrapInjector.class,
+		CommandInjector.class,
+		EntityInjector.class
 	};
-	
+
 	public static final Class<?>[] commands = new Class<?>[] {
 		TestCommand.class,
 		VoteKickCommand.class
@@ -70,11 +74,11 @@ public class FeatherWeight {
 		HookingHandler.loadJar(loader.store.jarFile);
 		loadOwnClass(Command.class.getName());
 		loadOwnClass(Entity.class.getName());
-		
+
 		for (Class<?> command : commands) {
 			loadOwnClass(command.getName());
 		}
-		
+
 		HookingHandler.loadHooks(hooks);
 		InjectionHandler.loadInjectors(injectors);
 
@@ -94,9 +98,9 @@ public class FeatherWeight {
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
-		
+
 		HookingHandler.doHooking();
-		
+
 		Field commandManagerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, MinecraftServerClass.commandManager);
 		FeatherWeight.commandManager = commandManagerField.get(minecraftServer);
 		FeatherWeight.minecraftServer = minecraftServer;

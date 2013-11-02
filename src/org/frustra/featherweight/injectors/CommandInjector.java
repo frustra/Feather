@@ -21,7 +21,7 @@ public class CommandInjector extends ClassInjector {
 	@SuppressWarnings("unchecked")
 	public void inject(CustomClassNode node) {
 		String entityClassName = Entity.class.getName().replace('.', '/');
-		
+
 		MethodNode executeProxy = cloneMethodNode(HandleExecuteCommandMethod.handleExecute);
 		executeProxy.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		executeProxy.instructions.add(new TypeInsnNode(Opcodes.NEW, entityClassName));
@@ -43,7 +43,7 @@ public class CommandInjector extends ClassInjector {
 		hasPermissionProxy.instructions.add(new InsnNode(Opcodes.IRETURN));
 		node.methods.add(hasPermissionProxy);
 	}
-	
+
 	public static MethodNode cloneMethodNode(MethodNode s) {
 		@SuppressWarnings("unchecked")
 		MethodNode d = new MethodNode(s.access & ~Opcodes.ACC_ABSTRACT, s.name, s.desc, s.signature, (String[]) s.exceptions.toArray(new String[0]));

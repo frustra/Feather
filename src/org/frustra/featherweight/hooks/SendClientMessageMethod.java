@@ -11,11 +11,11 @@ import com.sun.xml.internal.ws.org.objectweb.asm.Opcodes;
 
 public class SendClientMessageMethod extends MethodHook implements HookingPassTwo {
 	public static MethodNode sendMessage = null;
-	
+
 	public boolean match(CustomClassNode node) {
 		return node.equals(HelpCommandClass.baseCommand);
 	}
-	
+
 	public boolean match(CustomClassNode node, MethodNode m) {
 		Type[] args = Type.getArgumentTypes(m.desc);
 		Type ret = Type.getReturnType(m.desc);
@@ -26,12 +26,12 @@ public class SendClientMessageMethod extends MethodHook implements HookingPassTw
 		}
 		return false;
 	}
-	
+
 	public void reset() {
 		super.reset();
 		sendMessage = null;
 	}
-	
+
 	public void onComplete(CustomClassNode node, MethodNode m) {
 		sendMessage = m;
 		if (FeatherWeight.debug) {
