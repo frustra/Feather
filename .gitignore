@@ -7,3 +7,4 @@
 /white-list.txt
 /banned-*.txt
 /crash-reports
+/*.sqlite
