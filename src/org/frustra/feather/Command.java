@@ -52,11 +52,10 @@ public abstract class Command {
 		execute(Feather.minecraftServer, command);
 	}
 
-	@ProxyMethod(
-		classHook = "CommandManagerClass.commandManager",
-		methodHook = "ExecuteCommandMethod.executeCommand"
-	)
-	private static native int executeI(Object instance, Object source, String command);
+	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
+	private static int executeI(Object instance, Object source, String command) {
+		return 0;
+	}
 
 	/**
 	 * Executes a command string as if it were run by a particular source
@@ -79,11 +78,8 @@ public abstract class Command {
 		respond(Feather.minecraftServer, str, values);
 	}
 
-	@ProxyMethod(
-		classHook = "HelpCommandClass.baseCommand",
-		methodHook = "SendClientMessageMethod.sendMessage"
-	)
-	private static native void respondI(Object target, String str, Object[] values);
+	@ProxyMethod(classHook = "HelpCommandClass.baseCommand", methodHook = "SendClientMessageMethod.sendMessage")
+	private static void respondI(Object target, String str, Object[] values) {}
 
 	/**
 	 * Sends some text to a particular target internal entity.
