@@ -1,6 +1,6 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.MethodHook;
@@ -34,7 +34,7 @@ public class SendClientMessageMethod extends MethodHook implements HookingPassTw
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
 		sendMessage = m;
-		if (FeatherWeight.debug) {
+		if (Feather.debug) {
 			System.out.println("Send Client Message Method: " + sendMessage.name + sendMessage.desc);
 		}
 	}

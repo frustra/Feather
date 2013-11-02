@@ -15,6 +15,6 @@ public class Storage {
 	public Storage(CustomClassLoader loader) {
 		this.classLoader = loader;
 		loader.store = this;
-		this.filament = new FilamentStorage(loader, FeatherWeight.debug);
+		this.filament = new FilamentStorage(loader, Feather.debug);
 	}
 }

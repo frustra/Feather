@@ -27,7 +27,7 @@ import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;
 import org.objectweb.asm.ClassReader;
 
-public class FeatherWeight {
+public class Feather {
 	public static final String version = "1.0.0";
 	public static final boolean debug = true;
 
@@ -61,8 +61,8 @@ public class FeatherWeight {
 	};
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("FeatherWeight v" + FeatherWeight.version);
-		if (FeatherWeight.debug) System.out.println("Debug logging is enabled");
+		System.out.println("Feather v" + Feather.version);
+		if (Feather.debug) System.out.println("Debug logging is enabled");
 
 		File minecraftServer = new File("lib/minecraft_server.jar");
 		if (!minecraftServer.exists()) {
@@ -70,7 +70,7 @@ public class FeatherWeight {
 			return;
 		}
 
-		FeatherWeight.loader = new CustomClassLoader(minecraftServer);
+		Feather.loader = new CustomClassLoader(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
 		HookingHandler.loadJar(loader.store.jarFile);
@@ -91,34 +91,34 @@ public class FeatherWeight {
 	}
 
 	public static void loadOwnClass(String name) throws IOException {
-		InputStream classStream = FeatherWeight.class.getResourceAsStream("/" + name.replace('.', '/') + ".class");
+		InputStream classStream = Feather.class.getResourceAsStream("/" + name.replace('.', '/') + ".class");
 		CustomClassNode node = new CustomClassNode();
 		ClassReader reader = new ClassReader(classStream);
 		reader.accept(node, 0);
-		FeatherWeight.loader.store.filament.classes.put(name, node);
+		Feather.loader.store.filament.classes.put(name, node);
 	}
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
 
-		FeatherWeight.server = new Server();
+		Feather.server = new Server();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				System.out.println("FeatherWeight shutting down");
-				FeatherWeight.server.shutdown();
+				System.out.println("Feather shutting down");
+				Feather.server.shutdown();
 			}
 		});
 
 		HookingHandler.doHooking();
 
 		Field commandManagerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, MinecraftServerClass.commandManager);
-		FeatherWeight.commandManager = commandManagerField.get(minecraftServer);
-		FeatherWeight.minecraftServer = minecraftServer;
+		Feather.commandManager = commandManagerField.get(minecraftServer);
+		Feather.minecraftServer = minecraftServer;
 
 		Method addCommandMethod = HookingHandler.lookupMethod(CommandManagerClass.commandManager, AddCommandMethod.addCommand);
 		for (Class<?> cls : commands) {
 			Class<?> cls2 = loader.loadClass(cls.getName());
-			addCommandMethod.invoke(FeatherWeight.commandManager, cls2.newInstance());
+			addCommandMethod.invoke(Feather.commandManager, cls2.newInstance());
 		}
 	}
 }

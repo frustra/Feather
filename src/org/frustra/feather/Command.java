@@ -49,7 +49,7 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(String command) {
-		execute(FeatherWeight.minecraftServer, command);
+		execute(Feather.minecraftServer, command);
 	}
 
 	@ProxyMethod(
@@ -66,7 +66,7 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(Object source, String command) {
-		executeI(FeatherWeight.commandManager, (Command) source, command);
+		executeI(Feather.commandManager, (Command) source, command);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public abstract class Command {
 	 * @param values the list of values to interpolate
 	 */
 	public static void log(String str, Object[] values) {
-		respond(FeatherWeight.minecraftServer, str, values);
+		respond(Feather.minecraftServer, str, values);
 	}
 
 	@ProxyMethod(

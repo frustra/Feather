@@ -1,6 +1,6 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.Feather;
 import org.frustra.filament.FilamentStorage;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.ClassHook;
@@ -26,7 +26,7 @@ public class HelpCommandClass extends ClassHook implements HookingPassOne {
 		helpCommand = node;
 		baseCommand = FilamentStorage.store.classes.get(node.superName.replace('/', '.'));
 		baseCommandInterface = FilamentStorage.store.classes.get(((String) baseCommand.interfaces.get(0)).replace('/', '.'));
-		if (FeatherWeight.debug) {
+		if (Feather.debug) {
 			System.out.println("Help Command Class: " + helpCommand.name);
 			System.out.println("Base Command Class: " + baseCommand.name);
 			System.out.println("Base Command Interface: " + baseCommandInterface.name);

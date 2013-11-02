@@ -1,7 +1,7 @@
-FeatherWeight
-=============
+Feather
+=======
 
-FeatherWeight is a minimalist administration plugin for MineCraft servers.
+Feather is a minimalist administration plugin for MineCraft servers.
 
 ### Features
 

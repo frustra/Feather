@@ -1,6 +1,6 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.MethodHook;
@@ -27,7 +27,7 @@ public class GetCommandNameMethod extends MethodHook implements HookingPassTwo {
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
 		getName = m;
-		if (FeatherWeight.debug) {
+		if (Feather.debug) {
 			System.out.println("Get Command Name Method: " + getName.name + getName.desc);
 		}
 	}

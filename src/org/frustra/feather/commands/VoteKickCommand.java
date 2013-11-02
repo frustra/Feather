@@ -2,7 +2,7 @@ package org.frustra.feather.commands;
 
 import org.frustra.feather.Command;
 import org.frustra.feather.Entity;
-import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.Feather;
 import org.frustra.feather.server.KickVote;
 import org.frustra.feather.server.Player;
 
@@ -20,10 +20,10 @@ public class VoteKickCommand extends Command {
 				return;
 			}
 
-			Player target = FeatherWeight.server.getPlayer(arguments[1]);
-			KickVote vote = FeatherWeight.server.activeKickVotes.get(target);
+			Player target = Feather.server.getPlayer(arguments[1]);
+			KickVote vote = Feather.server.activeKickVotes.get(target);
 			if (vote == null) {
-				vote = FeatherWeight.server.activeKickVotes.put(target, new KickVote(target));
+				vote = Feather.server.activeKickVotes.put(target, new KickVote(target));
 			}
 
 			if (vote.addVote(source.getPlayer())) {

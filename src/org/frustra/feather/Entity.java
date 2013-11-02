@@ -46,6 +46,6 @@ public class Entity {
 	 * @return the player instance
 	 */
 	public Player getPlayer() {
-		return FeatherWeight.server.getPlayer(this.getName());
+		return Feather.server.getPlayer(this.getName());
 	}
 }

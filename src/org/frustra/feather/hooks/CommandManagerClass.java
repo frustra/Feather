@@ -1,6 +1,6 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.ClassHook;
 import org.frustra.filament.hooking.types.HookingPassOne;
@@ -22,7 +22,7 @@ public class CommandManagerClass extends ClassHook implements HookingPassOne {
 	public void onComplete(CustomClassNode node) {
 		commandManager = node;
 		commandManagerInterface = (String) commandManager.interfaces.get(0);
-		if (FeatherWeight.debug) {
+		if (Feather.debug) {
 			System.out.println("Command Manager Class: " + commandManager.name);
 			System.out.println("Command Manager Interface: " + commandManagerInterface);
 		}

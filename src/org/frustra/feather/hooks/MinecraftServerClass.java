@@ -1,6 +1,6 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.FeatherWeight;
+import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.types.FieldHook;
 import org.frustra.filament.hooking.types.HookingPassTwo;
@@ -28,7 +28,7 @@ public class MinecraftServerClass extends FieldHook implements HookingPassTwo {
 	public void onComplete(CustomClassNode node, FieldNode f) {
 		minecraftServer = node;
 		commandManager = f;
-		if (FeatherWeight.debug) {
+		if (Feather.debug) {
 			System.out.println("Command Manager Instance Field: " + commandManager.name);
 		}
 	}

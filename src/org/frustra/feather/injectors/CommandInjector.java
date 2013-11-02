@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 public class CommandInjector extends ClassInjector {
 	public boolean match(CustomClassNode node) {
-		return node.superName.equals("org/frustra/featherweight/Command");
+		return node.superName.equals("org/frustra/feather/Command");
 	}
 
 	@SuppressWarnings("unchecked")
