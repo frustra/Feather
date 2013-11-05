@@ -23,7 +23,6 @@ import org.frustra.feather.hooks.PlayerSocketHandlerClass;
 import org.frustra.feather.hooks.RconEntityClass;
 import org.frustra.feather.hooks.SendClientMessageMethod;
 import org.frustra.feather.injectors.BootstrapInjector;
-import org.frustra.feather.injectors.CommandInjector;
 import org.frustra.feather.injectors.PlayerJoinedInjector;
 import org.frustra.feather.injectors.PlayerLeftInjector;
 import org.frustra.feather.server.Server;
@@ -59,7 +58,6 @@ public class Feather {
 
 	public static final Class<?>[] injectors = new Class<?>[] {
 		BootstrapInjector.class,
-		CommandInjector.class,
 		PlayerJoinedInjector.class,
 		PlayerLeftInjector.class
 	};

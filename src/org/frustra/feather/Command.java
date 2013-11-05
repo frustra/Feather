@@ -14,17 +14,17 @@ public abstract class Command {
 	@ReplaceSuperClass("HelpCommandClass.baseCommand")
 	public Command() {}
 
-	@OverrideMethod("GetCommandNameMethod.getName")
-	private String getNameI() {
-		return this.getName();
-	}
-
 	/**
 	 * Gets the base name of the command, as it would be invoked by an entity.
 	 * 
 	 * @return the command's name
 	 */
 	public abstract String getName();
+	
+	@OverrideMethod("GetCommandNameMethod.getName")
+	private String _getName() {
+		return this.getName();
+	}
 
 	/**
 	 * Whether a particular entity has access to this command or not.
@@ -34,6 +34,11 @@ public abstract class Command {
 	 */
 	public abstract boolean hasPermission(Entity source);
 
+	@OverrideMethod("HasCommandPermissionMethod.hasPermission")
+	private boolean _hasPermission(Object source) {
+		return hasPermission(new Entity(source));
+	}
+
 	/**
 	 * Called when a particular entity has invoked this command. Permissions
 	 * will have already been checked.
@@ -42,6 +47,11 @@ public abstract class Command {
 	 * @param arguments any arguments given by the player, split by spaces
 	 */
 	public abstract void execute(Entity source, String[] arguments);
+
+	@OverrideMethod("HandleExecuteCommandMethod.handleExecute")
+	private void _execute(Entity source, String[] arguments) {
+		execute(new Entity(source), arguments);
+	}
 
 	/**
 	 * Executes a command string as the server.
@@ -53,9 +63,7 @@ public abstract class Command {
 	}
 
 	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
-	private static int executeI(Object instance, Object source, String command) {
-		return 0;
-	}
+	private static native int _execute(Object instance, Object source, String command);
 
 	/**
 	 * Executes a command string as if it were run by a particular source
@@ -65,11 +73,11 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(Object source, String command) {
-		executeI(Feather.commandManager, (Command) source, command);
+		_execute(Feather.commandManager, (Command) source, command);
 	}
 
 	@ProxyMethod(classHook = "HelpCommandClass.baseCommand", methodHook = "SendClientMessageMethod.sendMessage")
-	private static void sendMessageI(Object target, String str, Object[] values) {}
+	private static native void _sendMessage(Object target, String str, Object[] values);
 
 	/**
 	 * Sends some text to a particular target internal entity.
@@ -79,6 +87,6 @@ public abstract class Command {
 	 * @param values the list of values to interpolate
 	 */
 	public static void sendMessage(Object target, String str, Object[] values) {
-		sendMessageI(target, str, values);
+		_sendMessage(target, str, values);
 	}
 }
