@@ -1,6 +1,5 @@
-package org.frustra.feather.server;
+package org.frustra.feather.mod.server;
 
-import org.frustra.feather.Entity;
 
 public class Player extends Entity {
 	public final String name;

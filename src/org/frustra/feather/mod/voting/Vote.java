@@ -1,10 +1,10 @@
-package org.frustra.feather.voting;
+package org.frustra.feather.mod.voting;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.frustra.feather.Feather;
-import org.frustra.feather.server.Player;
+import org.frustra.feather.mod.server.Player;
 
 public abstract class Vote {
 	public double score = 0, participating = 0, threshold;

@@ -1,8 +1,8 @@
-package org.frustra.feather.server;
+package org.frustra.feather.mod.server;
 
 import java.util.HashMap;
 
-import org.frustra.feather.voting.KickVote;
+import org.frustra.feather.mod.voting.KickVote;
 
 public class Server {
 	private Database db;

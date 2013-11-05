@@ -7,8 +7,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import org.frustra.feather.commands.TestCommand;
-import org.frustra.feather.commands.VoteKickCommand;
 import org.frustra.feather.hooks.AddCommandMethod;
 import org.frustra.feather.hooks.CommandManagerClass;
 import org.frustra.feather.hooks.ExecuteCommandMethod;
@@ -25,8 +23,14 @@ import org.frustra.feather.hooks.SendClientMessageMethod;
 import org.frustra.feather.injectors.BootstrapInjector;
 import org.frustra.feather.injectors.PlayerJoinedInjector;
 import org.frustra.feather.injectors.PlayerLeftInjector;
-import org.frustra.feather.server.Player;
-import org.frustra.feather.server.Server;
+import org.frustra.feather.mod.commands.Command;
+import org.frustra.feather.mod.commands.TestCommand;
+import org.frustra.feather.mod.commands.VoteKickCommand;
+import org.frustra.feather.mod.logging.LogManager;
+import org.frustra.feather.mod.server.Entity;
+import org.frustra.feather.mod.server.Player;
+import org.frustra.feather.mod.server.PlayerListener;
+import org.frustra.feather.mod.server.Server;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;
@@ -81,7 +85,7 @@ public class Feather {
 		loader = new CustomClassLoader(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
-		HookingHandler.loadJar(loader.store.jarFile);
+		HookingHandler.loadJar(loader.jarFile);
 		loadOwnClass(Command.class.getName());
 
 		for (Class<?> command : commands) {
@@ -102,7 +106,7 @@ public class Feather {
 		CustomClassNode node = new CustomClassNode();
 		ClassReader reader = new ClassReader(classStream);
 		reader.accept(node, 0);
-		loader.store.filament.classes.put(name, node);
+		loader.filament.classes.put(name, node);
 	}
 
 	public static void bootstrap(Object minecraftServer) throws Exception {

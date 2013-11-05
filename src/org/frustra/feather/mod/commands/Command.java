@@ -1,5 +1,7 @@
-package org.frustra.feather;
+package org.frustra.feather.mod.commands;
 
+import org.frustra.feather.Feather;
+import org.frustra.feather.mod.server.Entity;
 import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ProxyMethod;
 import org.frustra.filament.injection.annotations.ReplaceSuperClass;
@@ -62,9 +64,6 @@ public abstract class Command {
 		execute(Feather.minecraftServer, command);
 	}
 
-	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
-	private static native int _execute(Object instance, Object source, String command);
-
 	/**
 	 * Executes a command string as if it were run by a particular source
 	 * entity.
@@ -76,17 +75,6 @@ public abstract class Command {
 		_execute(Feather.commandManager, (Command) source, command);
 	}
 
-	@ProxyMethod(classHook = "HelpCommandClass.baseCommand", methodHook = "SendClientMessageMethod.sendMessage")
-	private static native void _sendMessage(Object target, String str, Object[] values);
-
-	/**
-	 * Sends some text to a particular target internal entity.
-	 * 
-	 * @param target the proxied entity target
-	 * @param str the format string
-	 * @param values the list of values to interpolate
-	 */
-	public static void sendMessage(Object target, String str, Object[] values) {
-		_sendMessage(target, str, values);
-	}
+	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
+	private static native int _execute(Object instance, Object source, String command);
 }

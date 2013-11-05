@@ -1,8 +1,7 @@
-package org.frustra.feather.commands;
+package org.frustra.feather.mod.commands;
 
-import org.frustra.feather.Command;
-import org.frustra.feather.Entity;
-import org.frustra.feather.LogManager;
+import org.frustra.feather.mod.logging.LogManager;
+import org.frustra.feather.mod.server.Entity;
 
 public class TestCommand extends Command {
 

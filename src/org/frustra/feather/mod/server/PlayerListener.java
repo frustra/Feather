@@ -1,4 +1,5 @@
-package org.frustra.feather;
+package org.frustra.feather.mod.server;
+
 
 public interface PlayerListener {
 	public void playerJoined(Entity player);

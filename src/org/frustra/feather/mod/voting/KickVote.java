@@ -1,7 +1,7 @@
-package org.frustra.feather.voting;
+package org.frustra.feather.mod.voting;
 
-import org.frustra.feather.Command;
-import org.frustra.feather.server.Player;
+import org.frustra.feather.mod.commands.Command;
+import org.frustra.feather.mod.server.Player;
 
 public class KickVote extends Vote {
 	public static final double Threshold = 0;

@@ -1,8 +1,8 @@
-package org.frustra.feather.server;
+package org.frustra.feather.mod.server;
 
 import java.io.File;
 
-import org.frustra.feather.LogManager;
+import org.frustra.feather.mod.logging.LogManager;
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
 import org.tmatesoft.sqljet.core.schema.SqlJetConflictAction;

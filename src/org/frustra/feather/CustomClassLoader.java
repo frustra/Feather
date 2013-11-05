@@ -12,19 +12,23 @@ import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.jar.JarFile;
 
+import org.frustra.filament.FilamentStorage;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.injection.InjectionHandler;
 import org.objectweb.asm.ClassWriter;
 
 public class CustomClassLoader extends URLClassLoader {
-	public Storage store;
+	public FilamentStorage filament;
 	private ClassLoader parent;
+
+	public JarFile jarFile;
+	public File jarPath;
 
 	public CustomClassLoader(File jarPath) throws IOException {
 		super(new URL[] { jarPath.toURI().toURL() });
-		this.store = new Storage(this);
-		this.store.jarPath = jarPath;
-		this.store.jarFile = new JarFile(jarPath);
+		this.jarPath = jarPath;
+		this.jarFile = new JarFile(jarPath);
+		this.filament = new FilamentStorage(this, Feather.debug);
 		this.parent = CustomClassLoader.class.getClassLoader();
 	}
 
@@ -76,7 +80,7 @@ public class CustomClassLoader extends URLClassLoader {
 	}
 
 	public byte[] getClassBytes(String name) {
-		CustomClassNode node = store.filament.classes.get(name);
+		CustomClassNode node = filament.classes.get(name);
 
 		if (node != null) {
 			InjectionHandler.doInjection(node);

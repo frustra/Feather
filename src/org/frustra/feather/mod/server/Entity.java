@@ -1,9 +1,11 @@
-package org.frustra.feather;
+package org.frustra.feather.mod.server;
 
 import java.lang.reflect.Method;
 
+import org.frustra.feather.Feather;
+import org.frustra.feather.hooks.HelpCommandClass;
 import org.frustra.feather.hooks.RconEntityClass;
-import org.frustra.feather.server.Player;
+import org.frustra.feather.hooks.SendClientMessageMethod;
 import org.frustra.filament.hooking.HookingHandler;
 
 /**
@@ -13,6 +15,9 @@ import org.frustra.filament.hooking.HookingHandler;
 public class Entity {
 	public Object instance;
 
+	private static Method _getName = null;
+	private static Method _sendMessage = null;
+
 	public Entity(Object instance) {
 		this.instance = instance;
 	}
@@ -21,16 +26,14 @@ public class Entity {
 	 * @return the entity's name, which will be the username if a player
 	 */
 	public String getName() {
-		if (getNameMethod == null) getNameMethod = HookingHandler.lookupMethod(RconEntityClass.commandEntity, RconEntityClass.getEntityName);
 		try {
-			return (String) getNameMethod.invoke(instance);
+			if (_getName == null) _getName = HookingHandler.lookupMethod(RconEntityClass.commandEntity, RconEntityClass.getEntityName);
+			return (String) _getName.invoke(instance);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-
-	private static Method getNameMethod = null;
 
 	/**
 	 * Sends some text to this entity
@@ -49,17 +52,12 @@ public class Entity {
 	 */
 	public void sendMessage(String str, Object[] values) {
 		try {
-			if (commandMessage == null) {
-				Class<?> cmd = Feather.loader.loadClass(Command.class.getName());
-				commandMessage = cmd.getDeclaredMethod("sendMessage", new Class[] { Object.class, String.class, Object[].class });
-			}
-			commandMessage.invoke(null, instance, str, values);
+			if (_sendMessage == null) _sendMessage = HookingHandler.lookupMethod(HelpCommandClass.baseCommand, SendClientMessageMethod.sendMessage);
+			_sendMessage.invoke(null, instance, str, values);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	private static Method commandMessage = null;
 
 	/**
 	 * Gets the Player this entity represents, if it is a player
