@@ -1,14 +1,16 @@
 package org.frustra.feather.mod.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.frustra.feather.mod.voting.KickVote;
 
 public class Server {
 	private Database db;
+	private HashMap<String, Player> players = new HashMap<String, Player>();
+	private ArrayList<PlayerListener> playerListeners = new ArrayList<PlayerListener>();
 
-	private HashMap<String, Player> players;
-	public HashMap<Player, KickVote> activeKickVotes;
+	public HashMap<Player, KickVote> activeKickVotes = new HashMap<Player, KickVote>();
 
 	/**
 	 * Sets up the server and database
@@ -16,8 +18,6 @@ public class Server {
 	 * @throws Exception
 	 */
 	public Server() throws Exception {
-		players = new HashMap<String, Player>();
-		activeKickVotes = new HashMap<Player, KickVote>();
 		db = new Database();
 	}
 
@@ -80,11 +80,48 @@ public class Server {
 		return players.containsKey(name.toLowerCase());
 	}
 
+	/**
+	 * Gets the total karma of all players on the server, excluding players with
+	 * negative karma
+	 * 
+	 * @return the total karma
+	 */
 	public double totalKarma() {
 		double total = 0;
 		for (Player p : players.values()) {
-			total += p.karma;
+			if (p.karma > 0) total += p.karma;
 		}
 		return total;
+	}
+
+	/**
+	 * Gets the current motd string for a given player
+	 * 
+	 * @param player the player
+	 * @return the motd for the player
+	 */
+	public String getMotd(Player player) {
+		return "Welcome, " + player.getName() + "!";
+	}
+
+	public void addPlayerListener(PlayerListener listener) {
+		playerListeners.add(listener);
+	}
+
+	public void removePlayerListener(PlayerListener listener) {
+		playerListeners.remove(listener);
+	}
+
+	public void playerJoined(Player player) {
+		player.sendMessage(getMotd(player));
+		for (PlayerListener listener : playerListeners) {
+			listener.playerJoined(player);
+		}
+	}
+
+	public void playerLeft(Player player) {
+		for (PlayerListener listener : playerListeners) {
+			listener.playerLeft(player);
+		}
 	}
 }

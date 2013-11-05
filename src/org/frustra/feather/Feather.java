@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import org.frustra.feather.hooks.AddCommandMethod;
 import org.frustra.feather.hooks.CommandManagerClass;
@@ -134,41 +133,28 @@ public class Feather {
 
 		LogManager.getLogger().info("Feather successfully bootstrapped");
 
-		Feather.addPlayerListener(new PlayerListener() {
-			public void playerJoined(Entity playerEntity) {
-				Player player = server.loadPlayer(playerEntity.getName());
-				player.instance = playerEntity;
+		server.addPlayerListener(new PlayerListener() {
+			public void playerJoined(Player player) {
 				System.out.println(player.getName() + " joined");
-				player.sendMessage("Welcome!");
 			}
 
-			public void playerLeft(Entity playerEntity) {
-				server.unloadPlayer(playerEntity.getName());
+			public void playerLeft(Player player) {
+				System.out.println(player.getName() + " left");
 			}
 		});
 	}
 
-	private static ArrayList<PlayerListener> playerListeners = new ArrayList<PlayerListener>();
-
-	public static void addPlayerListener(PlayerListener listener) {
-		playerListeners.add(listener);
-	}
-
-	public static void removePlayerListener(PlayerListener listener) {
-		playerListeners.remove(listener);
-	}
-
 	public static void playerJoined(Object playerEntity) {
 		Entity entity = new Entity(playerEntity);
-		for (PlayerListener listener : playerListeners) {
-			listener.playerJoined(entity);
-		}
+		Player player = server.loadPlayer(entity.getName());
+		player.instance = playerEntity;
+		server.playerJoined(player);
 	}
 
 	public static void playerLeft(Object playerEntity) {
 		Entity entity = new Entity(playerEntity);
-		for (PlayerListener listener : playerListeners) {
-			listener.playerLeft(entity);
-		}
+		Player player = server.getPlayer(entity.getName());
+		if (player != null) server.playerLeft(player);
+		server.unloadPlayer(entity.getName());
 	}
 }

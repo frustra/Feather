@@ -1,7 +1,7 @@
 package org.frustra.feather.mod.server;
 
-
 public interface PlayerListener {
-	public void playerJoined(Entity player);
-	public void playerLeft(Entity player);
+	public void playerJoined(Player player);
+
+	public void playerLeft(Player player);
 }
