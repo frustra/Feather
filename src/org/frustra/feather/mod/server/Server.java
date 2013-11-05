@@ -95,7 +95,7 @@ public class Server {
 	}
 
 	/**
-	 * Gets the current motd string for a given player
+	 * Gets the current message of the day for a given player
 	 * 
 	 * @param player the player
 	 * @return the motd for the player
@@ -112,16 +112,24 @@ public class Server {
 		playerListeners.remove(listener);
 	}
 
-	public void playerJoined(Player player) {
+	public void playerJoined(Entity entity) {
+		Player player = loadPlayer(entity.getName());
+		player.instance = entity.instance;
+
 		player.sendMessage(getMotd(player));
 		for (PlayerListener listener : playerListeners) {
 			listener.playerJoined(player);
 		}
 	}
 
-	public void playerLeft(Player player) {
-		for (PlayerListener listener : playerListeners) {
-			listener.playerLeft(player);
+	public void playerLeft(Entity entity) {
+		Player player = getPlayer(entity.getName());
+
+		if (player != null) {
+			for (PlayerListener listener : playerListeners) {
+				listener.playerLeft(player);
+			}
+			unloadPlayer(entity.getName());
 		}
 	}
 }

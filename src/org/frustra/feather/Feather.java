@@ -146,15 +146,11 @@ public class Feather {
 
 	public static void playerJoined(Object playerEntity) {
 		Entity entity = new Entity(playerEntity);
-		Player player = server.loadPlayer(entity.getName());
-		player.instance = playerEntity;
-		server.playerJoined(player);
+		server.playerJoined(entity);
 	}
 
 	public static void playerLeft(Object playerEntity) {
 		Entity entity = new Entity(playerEntity);
-		Player player = server.getPlayer(entity.getName());
-		if (player != null) server.playerLeft(player);
-		server.unloadPlayer(entity.getName());
+		server.playerLeft(entity);
 	}
 }
