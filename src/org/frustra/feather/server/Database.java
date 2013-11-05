@@ -2,6 +2,7 @@ package org.frustra.feather.server;
 
 import java.io.File;
 
+import org.frustra.feather.LogManager;
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
 import org.tmatesoft.sqljet.core.schema.SqlJetConflictAction;
@@ -78,7 +79,7 @@ public class Database {
 		if (version < 1) return;
 		try {
 			if (getVersion() < 1) {
-				System.out.println("feather.sqlite not found, creating it now");
+				LogManager.getLogger().info("feather.sqlite not found, creating it now");
 				db.getOptions().setAutovacuum(true);
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 				db.createTable("create table players (name text not null primary key, karma real default 0, firstJoin int, lastSeen int)");

@@ -105,7 +105,7 @@ public class Feather {
 		Feather.server = new Server();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				System.out.println("Feather shutting down");
+				LogManager.getLogger().info("Feather shutting down");
 				Feather.server.shutdown();
 			}
 		});
