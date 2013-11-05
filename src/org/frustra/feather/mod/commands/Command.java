@@ -77,4 +77,16 @@ public abstract class Command {
 
 	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
 	private static native int _execute(Object instance, Object source, String command);
+
+	/**
+	 * Add a command to the command manager to it can be executed.
+	 * 
+	 * @param command the command object to be added
+	 */
+	public static void addCommand(Command command) {
+		_addCommand(Bootstrap.commandManager, command);
+	}
+
+	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "AddCommandMethod.addCommand")
+	private static native Object _addCommand(Object instance, Object command);
 }

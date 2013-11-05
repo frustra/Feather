@@ -15,6 +15,7 @@ public class Feather {
 	public static FilamentClassLoader loader = null;
 
 	public static final String[] includePackages = new String[] {
+		"org.frustra.feather.mod",
 		"org.frustra.feather.mod.commands",
 		"org.frustra.feather.mod.logging",
 		"org.frustra.feather.mod.server",

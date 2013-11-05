@@ -1,11 +1,8 @@
 package org.frustra.feather.mod;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.frustra.feather.Feather;
-import org.frustra.feather.hooks.AddCommandMethod;
-import org.frustra.feather.hooks.CommandManagerClass;
 import org.frustra.feather.hooks.MinecraftServerClass;
 import org.frustra.feather.mod.commands.Command;
 import org.frustra.feather.mod.logging.LogManager;
@@ -36,11 +33,10 @@ public class Bootstrap {
 		Bootstrap.commandManager = commandManagerField.get(minecraftServer);
 		Bootstrap.minecraftServer = minecraftServer;
 
-		Method addCommandMethod = HookingHandler.lookupMethod(CommandManagerClass.commandManager, AddCommandMethod.addCommand);
 		for (String name : Feather.loader.listPackage("org.frustra.feather.mod.commands")) {
 			if (name.equals(Command.class.getName())) continue;
 			Class<?> cls = Feather.loader.loadClass(name);
-			addCommandMethod.invoke(Bootstrap.commandManager, cls.newInstance());
+			Command.addCommand((Command) cls.newInstance());
 		}
 
 		LogManager.getLogger().info("Feather successfully bootstrapped");
