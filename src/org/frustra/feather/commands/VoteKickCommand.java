@@ -16,7 +16,7 @@ public class VoteKickCommand extends Command {
 		if (arguments.length == 1) {
 			Player sourcePlayer = source.getPlayer();
 			if (sourcePlayer.karma <= 0) {
-				source.respond("Not enough karma!");
+				source.sendMessage("Not enough karma!");
 				return;
 			}
 
@@ -27,11 +27,11 @@ public class VoteKickCommand extends Command {
 			}
 
 			if (!vote.addVote(source.getPlayer(), false)) {
-				source.respond("Still need more votes to kick %s.", new Object[] { target.name });
+				source.sendMessage("Still need more votes to kick %s.", new Object[] { target.name });
 			}
 		} else {
 			// TODO throw a ch
-			source.respond("Invalid usage.");
+			source.sendMessage("Invalid usage.");
 		}
 	}
 

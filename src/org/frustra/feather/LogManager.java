@@ -35,6 +35,11 @@ public class LogManager {
 		System.out.println("[" + sdf.format(new Date()) + "] [Feather/INFO]: " + param.toString());
 	}
 
+	public static void syserr(Object param) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		System.err.println("[" + sdf.format(new Date()) + "] [Feather/ERROR]: " + param.toString());
+	}
+
 	public static class Logger
 	{
 		private Object baseLogger;

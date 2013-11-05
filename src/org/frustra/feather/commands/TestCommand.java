@@ -12,7 +12,7 @@ public class TestCommand extends Command {
 
 	public void execute(Entity source, String[] arguments) {
 		LogManager.getLogger().info("test executed!");
-		source.respond("Your message was received, %s!", new Object[] { source.getName() });
+		source.sendMessage("Your message was received, %s!", new Object[] { source.getName() });
 	}
 
 	public boolean hasPermission(Entity source) {

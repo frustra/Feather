@@ -1,13 +1,20 @@
 package org.frustra.feather.server;
 
-public class Player {
-	public String name;
+import org.frustra.feather.Entity;
+
+public class Player extends Entity {
+	public final String name;
 	public double karma = 0;
 
 	public long firstJoin = 0, lastSeen = 0;
 
 	public Player(String name) {
+		super(null);
 		this.name = name;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public long seen() {

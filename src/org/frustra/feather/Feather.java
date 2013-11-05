@@ -25,6 +25,7 @@ import org.frustra.feather.hooks.SendClientMessageMethod;
 import org.frustra.feather.injectors.BootstrapInjector;
 import org.frustra.feather.injectors.PlayerJoinedInjector;
 import org.frustra.feather.injectors.PlayerLeftInjector;
+import org.frustra.feather.server.Player;
 import org.frustra.feather.server.Server;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
@@ -73,7 +74,7 @@ public class Feather {
 
 		File minecraftServer = new File("lib/minecraft_server.jar");
 		if (!minecraftServer.exists()) {
-			System.err.println("Minecraft server jar is missing");
+			LogManager.syserr("Minecraft server jar is missing");
 			return;
 		}
 
@@ -128,35 +129,38 @@ public class Feather {
 		}
 
 		LogManager.getLogger().info("Feather successfully bootstrapped");
-		
+
 		Feather.addPlayerListener(new PlayerListener() {
-			public void playerJoined(Entity player) {
+			public void playerJoined(Entity playerEntity) {
+				Player player = server.loadPlayer(playerEntity.getName());
+				player.instance = playerEntity;
 				System.out.println(player.getName() + " joined");
-				player.respond("Welcome!");
+				player.sendMessage("Welcome!");
 			}
-			public void playerLeft(Entity player) {
-				System.out.println(player.getName() + " left");
+
+			public void playerLeft(Entity playerEntity) {
+				server.unloadPlayer(playerEntity.getName());
 			}
 		});
 	}
-	
+
 	private static ArrayList<PlayerListener> playerListeners = new ArrayList<PlayerListener>();
-	
+
 	public static void addPlayerListener(PlayerListener listener) {
 		playerListeners.add(listener);
 	}
-	
+
 	public static void removePlayerListener(PlayerListener listener) {
 		playerListeners.remove(listener);
 	}
-	
+
 	public static void playerJoined(Object playerEntity) {
 		Entity entity = new Entity(playerEntity);
 		for (PlayerListener listener : playerListeners) {
 			listener.playerJoined(entity);
 		}
 	}
-	
+
 	public static void playerLeft(Object playerEntity) {
 		Entity entity = new Entity(playerEntity);
 		for (PlayerListener listener : playerListeners) {
