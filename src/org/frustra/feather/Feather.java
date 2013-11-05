@@ -30,6 +30,7 @@ import org.frustra.feather.mod.server.Entity;
 import org.frustra.feather.mod.server.Player;
 import org.frustra.feather.mod.server.PlayerListener;
 import org.frustra.feather.mod.server.Server;
+import org.frustra.filament.FilamentClassLoader;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;
@@ -41,7 +42,7 @@ public class Feather {
 
 	public static Object minecraftServer = null;
 	public static Object commandManager = null;
-	public static CustomClassLoader loader = null;
+	public static FilamentClassLoader loader = null;
 	public static Server server = null;
 
 	public static final Class<?>[] hooks = new Class<?>[] {
@@ -81,10 +82,14 @@ public class Feather {
 			return;
 		}
 
-		loader = new CustomClassLoader(minecraftServer);
+		loader = new FilamentClassLoader(debug) {
+			protected Class<?> defineClass(String name, byte[] buf) {
+				return defineClass(name, buf, 0, buf.length);
+			}
+		};
+		loader.loadJar(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
-		HookingHandler.loadJar(loader.jarFile);
 		loadOwnClass(Command.class.getName());
 
 		for (Class<?> command : commands) {
@@ -109,7 +114,7 @@ public class Feather {
 	}
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
-		loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
+		loader = (FilamentClassLoader) minecraftServer.getClass().getClassLoader();
 		Thread.currentThread().setName("Feather");
 
 		Feather.server = new Server();
