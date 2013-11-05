@@ -3,7 +3,7 @@ package org.frustra.feather.mod.voting;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.frustra.feather.Feather;
+import org.frustra.feather.mod.Bootstrap;
 import org.frustra.feather.mod.server.Player;
 
 public abstract class Vote {
@@ -36,7 +36,7 @@ public abstract class Vote {
 
 	public boolean hasPassed() {
 		// Treat the unvoted population as against the vote, until they vote
-		return (score + Feather.server.totalKarma() - participating) < threshold;
+		return (score + Bootstrap.server.totalKarma() - participating) < threshold;
 	}
 
 	public boolean hasVoted(Player p) {

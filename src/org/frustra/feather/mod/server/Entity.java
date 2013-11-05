@@ -2,10 +2,10 @@ package org.frustra.feather.mod.server;
 
 import java.lang.reflect.Method;
 
-import org.frustra.feather.Feather;
 import org.frustra.feather.hooks.HelpCommandClass;
 import org.frustra.feather.hooks.RconEntityClass;
 import org.frustra.feather.hooks.SendClientMessageMethod;
+import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.HookingHandler;
 
 /**
@@ -65,6 +65,6 @@ public class Entity {
 	 * @return the player instance
 	 */
 	public Player getPlayer() {
-		return Feather.server.getPlayer(this.getName());
+		return Bootstrap.server.getPlayer(this.getName());
 	}
 }

@@ -1,6 +1,5 @@
 package org.frustra.feather.mod.server;
 
-
 public class Player extends Entity {
 	public final String name;
 	public double karma = 0;

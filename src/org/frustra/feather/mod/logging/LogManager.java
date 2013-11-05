@@ -33,6 +33,4 @@ public class LogManager {
 		System.err.println("[" + sdf.format(new Date()) + "] [Feather/ERROR]: " + param.toString());
 	}
 
-	
-
 }

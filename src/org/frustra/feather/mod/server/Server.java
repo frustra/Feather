@@ -104,10 +104,20 @@ public class Server {
 		return "Welcome, " + player.getName() + "!";
 	}
 
+	/**
+	 * Adds the specified player listener to receive player join and leave events.
+	 * 
+	 * @param listener the player listener
+	 */
 	public void addPlayerListener(PlayerListener listener) {
 		playerListeners.add(listener);
 	}
 
+	/**
+	 * Reamoves a previously added player listener.
+	 * 
+	 * @param listener the player listener
+	 */
 	public void removePlayerListener(PlayerListener listener) {
 		playerListeners.remove(listener);
 	}

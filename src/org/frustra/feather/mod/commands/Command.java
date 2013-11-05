@@ -1,6 +1,6 @@
 package org.frustra.feather.mod.commands;
 
-import org.frustra.feather.Feather;
+import org.frustra.feather.mod.Bootstrap;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ProxyMethod;
@@ -22,7 +22,7 @@ public abstract class Command {
 	 * @return the command's name
 	 */
 	public abstract String getName();
-	
+
 	@OverrideMethod("GetCommandNameMethod.getName")
 	private String _getName() {
 		return this.getName();
@@ -61,7 +61,7 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(String command) {
-		execute(Feather.minecraftServer, command);
+		execute(Bootstrap.minecraftServer, command);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(Object source, String command) {
-		_execute(Feather.commandManager, (Command) source, command);
+		_execute(Bootstrap.commandManager, (Command) source, command);
 	}
 
 	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
