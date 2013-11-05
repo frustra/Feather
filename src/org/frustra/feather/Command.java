@@ -68,18 +68,8 @@ public abstract class Command {
 		executeI(Feather.commandManager, (Command) source, command);
 	}
 
-	/**
-	 * Sends some text to the server log.
-	 * 
-	 * @param str the format string
-	 * @param values the list of values to interpolate
-	 */
-	public static void log(String str, Object[] values) {
-		respond(Feather.minecraftServer, str, values);
-	}
-
 	@ProxyMethod(classHook = "HelpCommandClass.baseCommand", methodHook = "SendClientMessageMethod.sendMessage")
-	private static void respondI(Object target, String str, Object[] values) {}
+	private static void sendMessageI(Object target, String str, Object[] values) {}
 
 	/**
 	 * Sends some text to a particular target internal entity.
@@ -88,7 +78,7 @@ public abstract class Command {
 	 * @param str the format string
 	 * @param values the list of values to interpolate
 	 */
-	public static void respond(Object target, String str, Object[] values) {
-		respondI(target, str, values);
+	public static void sendMessage(Object target, String str, Object[] values) {
+		sendMessageI(target, str, values);
 	}
 }

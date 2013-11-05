@@ -1,6 +1,10 @@
 package org.frustra.feather;
 
+import java.lang.reflect.Method;
+
+import org.frustra.feather.hooks.RconEntityClass;
 import org.frustra.feather.server.Player;
+import org.frustra.filament.hooking.HookingHandler;
 
 /**
  * Represents an entity that can issue commands. This is a helper class, which
@@ -17,9 +21,16 @@ public class Entity {
 	 * @return the entity's name, which will be the username if a player
 	 */
 	public String getName() {
-		// Dynamically generated method
-		return null;
+		if (getNameMethod == null) getNameMethod = HookingHandler.lookupMethod(RconEntityClass.commandEntity, RconEntityClass.getEntityName);
+		try {
+			return (String) getNameMethod.invoke(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
+	
+	private static Method getNameMethod = null;
 
 	/**
 	 * Sends some text to this entity
@@ -37,8 +48,18 @@ public class Entity {
 	 * @param values the list of values to interpolate
 	 */
 	public void respond(String str, Object[] values) {
-		Command.respond(this.entity, str, values);
+		try {
+			if (commandMessage == null) {
+				Class<?> cmd = Feather.loader.loadClass(Command.class.getName());
+				commandMessage = cmd.getDeclaredMethod("sendMessage", new Class[] {Object.class, String.class, Object[].class});
+			}
+			commandMessage.invoke(null, this.entity, str, values);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	private static Method commandMessage = null;
 
 	/**
 	 * Gets the Player this entity represents, if it is a player

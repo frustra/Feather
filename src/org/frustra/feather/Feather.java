@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import org.frustra.feather.commands.TestCommand;
 import org.frustra.feather.commands.VoteKickCommand;
@@ -16,11 +17,15 @@ import org.frustra.feather.hooks.HandleExecuteCommandMethod;
 import org.frustra.feather.hooks.HasCommandPermissionMethod;
 import org.frustra.feather.hooks.HelpCommandClass;
 import org.frustra.feather.hooks.MinecraftServerClass;
+import org.frustra.feather.hooks.PlayerConnectionHandlerClass;
+import org.frustra.feather.hooks.PlayerEntityField;
+import org.frustra.feather.hooks.PlayerSocketHandlerClass;
 import org.frustra.feather.hooks.RconEntityClass;
 import org.frustra.feather.hooks.SendClientMessageMethod;
 import org.frustra.feather.injectors.BootstrapInjector;
 import org.frustra.feather.injectors.CommandInjector;
-import org.frustra.feather.injectors.EntityInjector;
+import org.frustra.feather.injectors.PlayerJoinedInjector;
+import org.frustra.feather.injectors.PlayerLeftInjector;
 import org.frustra.feather.server.Server;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
@@ -45,6 +50,9 @@ public class Feather {
 		HasCommandPermissionMethod.class,
 		HelpCommandClass.class,
 		MinecraftServerClass.class,
+		PlayerConnectionHandlerClass.class,
+		PlayerEntityField.class,
+		PlayerSocketHandlerClass.class,
 		RconEntityClass.class,
 		SendClientMessageMethod.class
 	};
@@ -52,7 +60,8 @@ public class Feather {
 	public static final Class<?>[] injectors = new Class<?>[] {
 		BootstrapInjector.class,
 		CommandInjector.class,
-		EntityInjector.class
+		PlayerJoinedInjector.class,
+		PlayerLeftInjector.class
 	};
 
 	public static final Class<?>[] commands = new Class<?>[] {
@@ -75,7 +84,6 @@ public class Feather {
 
 		HookingHandler.loadJar(loader.store.jarFile);
 		loadOwnClass(Command.class.getName());
-		loadOwnClass(Entity.class.getName());
 
 		for (Class<?> command : commands) {
 			loadOwnClass(command.getName());
@@ -111,8 +119,6 @@ public class Feather {
 			}
 		});
 
-		HookingHandler.doHooking();
-
 		Field commandManagerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, MinecraftServerClass.commandManager);
 		Feather.commandManager = commandManagerField.get(minecraftServer);
 		Feather.minecraftServer = minecraftServer;
@@ -124,5 +130,39 @@ public class Feather {
 		}
 
 		LogManager.getLogger().info("Feather successfully bootstrapped");
+		
+		Feather.addPlayerListener(new PlayerListener() {
+			public void playerJoined(Entity player) {
+				System.out.println(player.getName() + " joined");
+				player.respond("Welcome!");
+			}
+			public void playerLeft(Entity player) {
+				System.out.println(player.getName() + " left");
+			}
+		});
+	}
+	
+	private static ArrayList<PlayerListener> playerListeners = new ArrayList<PlayerListener>();
+	
+	public static void addPlayerListener(PlayerListener listener) {
+		playerListeners.add(listener);
+	}
+	
+	public static void removePlayerListener(PlayerListener listener) {
+		playerListeners.remove(listener);
+	}
+	
+	public static void playerJoined(Object playerEntity) {
+		Entity entity = new Entity(playerEntity);
+		for (PlayerListener listener : playerListeners) {
+			listener.playerJoined(entity);
+		}
+	}
+	
+	public static void playerLeft(Object playerEntity) {
+		Entity entity = new Entity(playerEntity);
+		for (PlayerListener listener : playerListeners) {
+			listener.playerLeft(entity);
+		}
 	}
 }

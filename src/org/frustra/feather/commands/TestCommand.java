@@ -11,7 +11,7 @@ public class TestCommand extends Command {
 	}
 
 	public void execute(Entity source, String[] arguments) {
-		LogManager.getLogger().debug("test executed!");
+		LogManager.getLogger().info("test executed!");
 		source.respond("Your message was received, %s!", new Object[] { source.getName() });
 	}
 

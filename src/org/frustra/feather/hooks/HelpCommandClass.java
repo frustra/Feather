@@ -1,8 +1,8 @@
 package org.frustra.feather.hooks;
 
 import org.frustra.feather.Feather;
-import org.frustra.filament.FilamentStorage;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.hooking.types.ClassHook;
 import org.frustra.filament.hooking.types.HookingPassOne;
 
@@ -24,8 +24,8 @@ public class HelpCommandClass extends ClassHook implements HookingPassOne {
 
 	public void onComplete(CustomClassNode node) {
 		helpCommand = node;
-		baseCommand = FilamentStorage.store.classes.get(node.superName.replace('/', '.'));
-		baseCommandInterface = FilamentStorage.store.classes.get(((String) baseCommand.interfaces.get(0)).replace('/', '.'));
+		baseCommand = HookingHandler.getClassNode(node.superName);
+		baseCommandInterface = HookingHandler.getClassNode((String) baseCommand.interfaces.get(0));
 		if (Feather.debug) {
 			System.out.println("Help Command Class: " + helpCommand.name);
 			System.out.println("Base Command Class: " + baseCommand.name);

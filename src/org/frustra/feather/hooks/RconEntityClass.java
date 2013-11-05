@@ -1,8 +1,8 @@
 package org.frustra.feather.hooks;
 
 import org.frustra.feather.Feather;
-import org.frustra.filament.FilamentStorage;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.hooking.types.HookingPassOne;
 import org.frustra.filament.hooking.types.MethodHook;
 import org.objectweb.asm.Type;
@@ -40,7 +40,7 @@ public class RconEntityClass extends MethodHook implements HookingPassOne {
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
 		rconEntity = node;
-		commandEntity = FilamentStorage.store.classes.get((String) rconEntity.interfaces.get(0));
+		commandEntity = HookingHandler.getClassNode((String) rconEntity.interfaces.get(0));
 		getEntityName = m;
 		if (Feather.debug) {
 			System.out.println("Rcon Entity Class: " + rconEntity.name);
