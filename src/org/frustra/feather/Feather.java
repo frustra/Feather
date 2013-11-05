@@ -61,8 +61,8 @@ public class Feather {
 	};
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("Feather v" + Feather.version);
-		if (Feather.debug) System.out.println("Debug logging is enabled");
+		LogManager.syslog("Feather version " + Feather.version + " starting up");
+		if (Feather.debug) LogManager.syslog("Debug logging is enabled");
 
 		File minecraftServer = new File("lib/minecraft_server.jar");
 		if (!minecraftServer.exists()) {
@@ -70,7 +70,7 @@ public class Feather {
 			return;
 		}
 
-		Feather.loader = new CustomClassLoader(minecraftServer);
+		loader = new CustomClassLoader(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
 		HookingHandler.loadJar(loader.store.jarFile);
@@ -95,7 +95,7 @@ public class Feather {
 		CustomClassNode node = new CustomClassNode();
 		ClassReader reader = new ClassReader(classStream);
 		reader.accept(node, 0);
-		Feather.loader.store.filament.classes.put(name, node);
+		loader.store.filament.classes.put(name, node);
 	}
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
@@ -105,6 +105,7 @@ public class Feather {
 		Feather.server = new Server();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
+				this.setName("Feather");
 				LogManager.getLogger().info("Feather shutting down");
 				Feather.server.shutdown();
 			}

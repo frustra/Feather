@@ -1,6 +1,8 @@
 package org.frustra.feather;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LogManager {
 	private static Method _debug, _error, _fatal, _info, _trace, _warn;
@@ -26,6 +28,11 @@ public class LogManager {
 			}
 		}
 		return instance;
+	}
+
+	public static void syslog(Object param) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		System.out.println("[" + sdf.format(new Date()) + "] [Feather/INFO]: " + param.toString());
 	}
 
 	public static class Logger
