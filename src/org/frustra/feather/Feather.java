@@ -100,6 +100,7 @@ public class Feather {
 
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		loader = (CustomClassLoader) minecraftServer.getClass().getClassLoader();
+		Thread.currentThread().setName("Feather");
 
 		Feather.server = new Server();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -120,5 +121,7 @@ public class Feather {
 			Class<?> cls2 = loader.loadClass(cls.getName());
 			addCommandMethod.invoke(Feather.commandManager, cls2.newInstance());
 		}
+
+		LogManager.getLogger().info("Feather successfully bootstrapped");
 	}
 }
