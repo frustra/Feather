@@ -1,8 +1,8 @@
 package org.frustra.feather.server;
 
 public class Player {
-	public long karma = 0;
 	public String name;
+	public double karma = 0;
 
 	public long firstJoin = 0, lastSeen = 0;
 

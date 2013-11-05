@@ -81,7 +81,7 @@ public class Database {
 				System.out.println("feather.sqlite not found, creating it now");
 				db.getOptions().setAutovacuum(true);
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
-				db.createTable("create table players (name text not null primary key, karma int default 0, firstJoin int, lastSeen int)");
+				db.createTable("create table players (name text not null primary key, karma real default 0, firstJoin int, lastSeen int)");
 				db.getOptions().setUserVersion(1);
 				db.commit();
 			}

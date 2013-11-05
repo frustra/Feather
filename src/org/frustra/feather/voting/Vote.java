@@ -3,27 +3,31 @@ package org.frustra.feather.voting;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.frustra.feather.Feather;
 import org.frustra.feather.server.Player;
 
-public class Vote {
-	public long score = 0, threshold;
-	public Set<String> voters;
+public abstract class Vote {
+	public double score = 0, participating = 0, threshold;
+	public Set<Player> voters;
 
-	public Vote(long threshold) {
+	public Vote(double threshold) {
 		this.threshold = threshold;
-		this.voters = new HashSet<String>();
+		this.voters = new HashSet<Player>();
 	}
 
 	/**
 	 * Adds a player's vote to this vote session
 	 * 
 	 * @param p the voting player
+	 * @param agree if the player voted yes or no
 	 * @return true if the vote has passed
 	 */
-	public boolean addVote(Player p) {
-		if (p.karma > 0 && voters.add(p.name)) {
-			score += p.karma;
+	public boolean addVote(Player p, boolean agree) {
+		if (p.karma > 0 && voters.add(p)) {
+			score += agree ? -p.karma : p.karma;
+			participating += p.karma;
 			if (hasPassed()) {
+				passed();
 				return true;
 			}
 		}
@@ -31,10 +35,17 @@ public class Vote {
 	}
 
 	public boolean hasPassed() {
-		return score >= threshold;
+		// Treat the unvoted population as against the vote, until they vote
+		return (score + Feather.server.totalKarma() - participating) < threshold;
 	}
 
 	public boolean hasVoted(Player p) {
 		return voters.contains(p.name);
 	}
+
+	public abstract void passed();
+
+	public abstract void failed();
+
+	public abstract void timeout();
 }

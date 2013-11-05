@@ -2,7 +2,6 @@ package org.frustra.feather.server;
 
 import java.util.HashMap;
 
-import org.frustra.feather.voting.BanVote;
 import org.frustra.feather.voting.KickVote;
 
 public class Server {
@@ -10,7 +9,6 @@ public class Server {
 
 	private HashMap<String, Player> players;
 	public HashMap<Player, KickVote> activeKickVotes;
-	public HashMap<Player, BanVote> activeBanVotes;
 
 	/**
 	 * Sets up the server and database
@@ -20,7 +18,6 @@ public class Server {
 	public Server() throws Exception {
 		players = new HashMap<String, Player>();
 		activeKickVotes = new HashMap<Player, KickVote>();
-		activeBanVotes = new HashMap<Player, BanVote>();
 		db = new Database();
 	}
 
@@ -81,5 +78,13 @@ public class Server {
 	 */
 	public boolean isOnline(String name) {
 		return players.containsKey(name.toLowerCase());
+	}
+
+	public double totalKarma() {
+		double total = 0;
+		for (Player p : players.values()) {
+			total += p.karma;
+		}
+		return total;
 	}
 }

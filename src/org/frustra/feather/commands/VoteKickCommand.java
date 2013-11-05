@@ -26,9 +26,7 @@ public class VoteKickCommand extends Command {
 				vote = Feather.server.activeKickVotes.put(target, new KickVote(target));
 			}
 
-			if (vote.addVote(source.getPlayer())) {
-				Command.execute("kick " + target.name);
-			} else {
+			if (!vote.addVote(source.getPlayer(), false)) {
 				source.respond("Still need more votes to kick %s.", new Object[] { target.name });
 			}
 		} else {
