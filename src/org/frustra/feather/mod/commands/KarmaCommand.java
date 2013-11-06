@@ -41,4 +41,8 @@ public class KarmaCommand extends Command {
 			source.sendMessage("Target player not found");
 		}
 	}
+
+	public String getUsage(Entity source) {
+		return "/karma <set|add> <amount>";
+	}
 }
