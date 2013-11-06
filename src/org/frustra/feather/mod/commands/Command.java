@@ -23,7 +23,7 @@ public abstract class Command {
 	 */
 	public abstract String getName();
 
-	@OverrideMethod("GetCommandNameMethod.getName")
+	@OverrideMethod("HelpCommandClass.getCommandName")
 	private String _getName() {
 		return this.getName();
 	}
@@ -49,6 +49,18 @@ public abstract class Command {
 	 * @param arguments any arguments given by the player, split by spaces
 	 */
 	public abstract void execute(Entity source, String[] arguments);
+
+	/**
+	 * Gets the usage string of the command, as it would be displayed by the help command.
+	 * 
+	 * @return the command's usage string
+	 */
+	public abstract String getUsage(Entity source);
+
+	@OverrideMethod("GetCommandUsageMethod.getUsage")
+	private String _getUsage(Object source) {
+		return getUsage(new Entity(source));
+	}
 
 	@OverrideMethod("HandleExecuteCommandMethod.handleExecute")
 	private void _execute(Entity source, String[] arguments) {

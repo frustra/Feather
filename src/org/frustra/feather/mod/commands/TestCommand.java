@@ -4,7 +4,6 @@ import org.frustra.feather.mod.logging.LogManager;
 import org.frustra.feather.mod.server.Entity;
 
 public class TestCommand extends Command {
-
 	public String getName() {
 		return "test";
 	}
@@ -16,5 +15,9 @@ public class TestCommand extends Command {
 
 	public boolean hasPermission(Entity source) {
 		return true;
+	}
+
+	public String getUsage(Entity source) {
+		return "/test";
 	}
 }

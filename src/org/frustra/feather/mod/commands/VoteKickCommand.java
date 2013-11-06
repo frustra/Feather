@@ -14,7 +14,7 @@ public class VoteKickCommand extends Command {
 	public void execute(Entity source, String[] arguments) {
 		if (arguments.length == 1) {
 			Player sourcePlayer = source.getPlayer();
-			if (sourcePlayer.karma <= 0) {
+			if (sourcePlayer == null || sourcePlayer.karma <= 0) {
 				source.sendMessage("Not enough karma!");
 				return;
 			}
@@ -36,5 +36,9 @@ public class VoteKickCommand extends Command {
 
 	public boolean hasPermission(Entity source) {
 		return true;
+	}
+
+	public String getUsage(Entity source) {
+		return "/votekick <player>";
 	}
 }
