@@ -6,6 +6,7 @@ import org.frustra.feather.hooks.PlayerEntityField;
 import org.frustra.feather.hooks.PlayerSocketHandlerClass;
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.ClassInjector;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -23,7 +24,7 @@ public class PlayerLeftInjector extends ClassInjector {
 	@SuppressWarnings("unchecked")
 	public void inject(CustomClassNode node) {
 		for (MethodNode method : (List<MethodNode>) node.methods) {
-			if (method.name.equals(PlayerSocketHandlerClass.playerLeft.name) && method.desc.equals(PlayerSocketHandlerClass.playerLeft.desc)) {
+			if (HookingHandler.compareMethodNode(method, PlayerSocketHandlerClass.playerLeft)) {
 				InsnList iList = new InsnList();
 				iList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				iList.add(new FieldInsnNode(Opcodes.GETFIELD, PlayerSocketHandlerClass.socketHandler.name, PlayerEntityField.entity.name, PlayerEntityField.entity.desc));
