@@ -1,5 +1,8 @@
 package org.frustra.feather.mod.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.feather.mod.Command;
 import org.frustra.feather.mod.CommandException;
@@ -45,5 +48,20 @@ public class KarmaCommand extends Command {
 
 	public String getUsage(Entity source) {
 		return "/karma <set|add> [target player] <amount>";
+	}
+
+	public List<String> getCompletionList(Entity source, String[] arguments) {
+		ArrayList<String> list = new ArrayList<String>();
+		if (arguments.length == 1) {
+			list.add("set");
+			list.add("add");
+		} else if (arguments.length == 2) {
+			for (Player p : Bootstrap.server.getPlayers()) {
+				if (p.getName().startsWith(arguments[1])) {
+					list.add(p.getName());
+				}
+			}
+		}
+		return list;
 	}
 }

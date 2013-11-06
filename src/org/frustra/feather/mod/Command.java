@@ -1,5 +1,8 @@
 package org.frustra.feather.mod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ProxyMethod;
@@ -50,7 +53,8 @@ public abstract class Command {
 	public abstract void execute(Entity source, String[] arguments);
 
 	/**
-	 * Gets the usage string of the command, as it would be displayed by the help command.
+	 * Gets the usage string of the command, as it would be displayed by the
+	 * help command.
 	 * 
 	 * @return the command's usage string
 	 */
@@ -59,6 +63,22 @@ public abstract class Command {
 	@OverrideMethod("GetCommandUsageMethod.getUsage")
 	private String _getUsage(Object source) {
 		return getUsage(new Entity(source));
+	}
+
+	/**
+	 * Gets the tab completion candidates for an in progress command.
+	 * 
+	 * @param source the entity invoking the completion
+	 * @param arguments the current arguments so far
+	 * @return the list of candidate completions
+	 */
+	public List<String> getCompletionList(Entity source, String[] arguments) {
+		return new ArrayList<String>();
+	}
+
+	@OverrideMethod("CommandTabCompletionMethod.tabCompletion")
+	private List<String> _getCompletionList(Object source, String[] arguments) {
+		return getCompletionList(new Entity(source), arguments);
 	}
 
 	/**

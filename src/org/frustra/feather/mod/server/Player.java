@@ -24,7 +24,7 @@ public class Player extends Entity {
 	/**
 	 * Indicates that the player was just seen
 	 * 
-	 * @return
+	 * @return the current time in seconds
 	 */
 	public long seen() {
 		this.lastSeen = System.currentTimeMillis() / 1000;
@@ -47,6 +47,8 @@ public class Player extends Entity {
 	}
 
 	/**
+	 * Reaches into the server and determines if this player is an operator
+	 * 
 	 * @return true if the player is an operator
 	 */
 	public boolean isOperator() {
