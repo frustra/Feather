@@ -53,7 +53,7 @@ public class Bootstrap {
 	}
 	
 	public static void worldLoaded() {
-		System.out.println("World loaded!");
+		server.ready();
 	}
 
 	public static void playerJoined(Object playerEntity) {
