@@ -31,6 +31,8 @@ public class Server {
 
 	public void ready() {
 		Command.execute("scoreboard objectives add karma dummy K");
+		Command.execute("scoreboard objectives setdisplay list karma");
+		Command.execute("scoreboard objectives setdisplay belowName karma");
 	}
 
 	/**
