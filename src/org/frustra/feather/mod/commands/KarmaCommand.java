@@ -44,6 +44,6 @@ public class KarmaCommand extends Command {
 	}
 
 	public String getUsage(Entity source) {
-		return "/karma <set|add> <amount>";
+		return "/karma <set|add> [target player] <amount>";
 	}
 }
