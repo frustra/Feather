@@ -8,7 +8,6 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 
 public class PlayerConnectionHandlerField extends FieldHook implements HookingPassTwo {
-	public static CustomClassNode minecraftServer = null;
 	public static FieldNode playerConnectionHandler = null;
 
 	public boolean match(CustomClassNode node) {
@@ -21,12 +20,10 @@ public class PlayerConnectionHandlerField extends FieldHook implements HookingPa
 
 	public void reset() {
 		super.reset();
-		minecraftServer = null;
 		playerConnectionHandler = null;
 	}
 
 	public void onComplete(CustomClassNode node, FieldNode f) {
-		minecraftServer = node;
 		playerConnectionHandler = f;
 		if (Feather.debug) {
 			System.out.println("Player Connection Handler Instance Field: " + playerConnectionHandler.name);

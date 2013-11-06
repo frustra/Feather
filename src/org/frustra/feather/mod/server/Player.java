@@ -1,6 +1,14 @@
 package org.frustra.feather.mod.server;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import org.frustra.feather.hooks.CommandTabCompletionMethod;
+import org.frustra.feather.hooks.MinecraftServerClass;
+import org.frustra.feather.hooks.PlayerConnectionHandlerClass;
+import org.frustra.feather.hooks.PlayerConnectionHandlerField;
 import org.frustra.feather.mod.Bootstrap;
+import org.frustra.filament.hooking.HookingHandler;
 
 public class Player extends Entity {
 	public final String name;
@@ -34,6 +42,18 @@ public class Player extends Entity {
 	public void setKarma(double karma) {
 		this.karma = karma;
 		Bootstrap.server.updatePlayer(this);
+	}
+
+	public boolean isOperator() {
+		try {
+			Field playerConnectionHandlerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, PlayerConnectionHandlerField.playerConnectionHandler);
+			Object playerConnectionHandler = playerConnectionHandlerField.get(Bootstrap.minecraftServer);
+			Method isOperatorMethod = HookingHandler.lookupMethod(PlayerConnectionHandlerClass.connectionHandler, CommandTabCompletionMethod.isOperator);
+			return (Boolean) isOperatorMethod.invoke(playerConnectionHandler, getName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public int hashCode() {
