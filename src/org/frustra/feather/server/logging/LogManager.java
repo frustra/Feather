@@ -1,4 +1,4 @@
-package org.frustra.feather.mod.logging;
+package org.frustra.feather.server.logging;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;

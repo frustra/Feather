@@ -1,13 +1,9 @@
-package org.frustra.feather.mod;
+package org.frustra.feather.server;
 
 import java.lang.reflect.Field;
 
 import org.frustra.feather.Feather;
-import org.frustra.feather.mod.logging.LogManager;
-import org.frustra.feather.mod.server.Entity;
-import org.frustra.feather.mod.server.Player;
-import org.frustra.feather.mod.server.PlayerListener;
-import org.frustra.feather.mod.server.Server;
+import org.frustra.feather.server.logging.LogManager;
 import org.frustra.filament.hooking.HookingHandler;
 
 public class Bootstrap {
@@ -22,7 +18,7 @@ public class Bootstrap {
 		Bootstrap.commandManager = commandManagerField.get(minecraftServer);
 		Bootstrap.minecraftServer = minecraftServer;
 
-		for (String name : Feather.loader.listPackage("org.frustra.feather.mod.commands")) {
+		for (String name : Feather.loader.listPackage("org.frustra.feather.server.commands")) {
 			if (name.endsWith("Command") && !name.equals("Command")) {
 				Class<?> cls = Feather.loader.loadClass(name);
 				Command.addCommand((Command) cls.newInstance());

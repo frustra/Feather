@@ -2,7 +2,7 @@ package org.frustra.feather.injectors;
 
 import java.util.List;
 
-import org.frustra.feather.mod.Bootstrap;
+import org.frustra.feather.server.Bootstrap;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.ClassInjector;

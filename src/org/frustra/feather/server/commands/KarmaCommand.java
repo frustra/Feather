@@ -1,14 +1,14 @@
-package org.frustra.feather.mod.commands;
+package org.frustra.feather.server.commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.frustra.feather.mod.Bootstrap;
-import org.frustra.feather.mod.Command;
-import org.frustra.feather.mod.CommandException;
-import org.frustra.feather.mod.CommandUsageException;
-import org.frustra.feather.mod.server.Entity;
-import org.frustra.feather.mod.server.Player;
+import org.frustra.feather.server.Bootstrap;
+import org.frustra.feather.server.Command;
+import org.frustra.feather.server.CommandException;
+import org.frustra.feather.server.CommandUsageException;
+import org.frustra.feather.server.Entity;
+import org.frustra.feather.server.Player;
 
 public class KarmaCommand extends Command {
 	public String getName() {

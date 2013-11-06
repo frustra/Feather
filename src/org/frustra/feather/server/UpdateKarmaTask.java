@@ -1,6 +1,5 @@
-package org.frustra.feather.mod.server;
+package org.frustra.feather.server;
 
-import org.frustra.feather.mod.Bootstrap;
 
 public class UpdateKarmaTask implements Runnable {
 	public void run() {

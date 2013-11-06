@@ -1,9 +1,8 @@
-package org.frustra.feather.mod;
+package org.frustra.feather.server;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.frustra.feather.mod.server.Entity;
 import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ProxyMethod;
 import org.frustra.filament.injection.annotations.ReplaceSuperClass;

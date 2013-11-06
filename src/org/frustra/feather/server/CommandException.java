@@ -1,4 +1,4 @@
-package org.frustra.feather.mod;
+package org.frustra.feather.server;
 
 import org.frustra.filament.injection.annotations.ReplaceSuperClass;
 

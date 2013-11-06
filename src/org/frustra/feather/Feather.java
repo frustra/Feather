@@ -3,7 +3,7 @@ package org.frustra.feather;
 import java.io.File;
 import java.lang.reflect.Method;
 
-import org.frustra.feather.mod.logging.LogManager;
+import org.frustra.feather.server.logging.LogManager;
 import org.frustra.filament.FilamentClassLoader;
 import org.frustra.filament.hooking.HookingHandler;
 import org.frustra.filament.injection.InjectionHandler;
@@ -15,11 +15,10 @@ public class Feather {
 	public static FilamentClassLoader loader = null;
 
 	public static final String[] includePackages = new String[] {
-		"org.frustra.feather.mod",
-		"org.frustra.feather.mod.commands",
-		"org.frustra.feather.mod.logging",
-		"org.frustra.feather.mod.server",
-		"org.frustra.feather.mod.voting"
+		"org.frustra.feather.server",
+		"org.frustra.feather.server.commands",
+		"org.frustra.feather.server.logging",
+		"org.frustra.feather.server.voting"
 	};
 
 	public static void main(String[] args) throws Exception {

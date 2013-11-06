@@ -1,4 +1,4 @@
-package org.frustra.feather.mod.server;
+package org.frustra.feather.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.frustra.feather.mod.Command;
-import org.frustra.feather.mod.voting.KickVote;
+import org.frustra.feather.server.voting.KickVote;
 
 public class Server {
 	private Database db;

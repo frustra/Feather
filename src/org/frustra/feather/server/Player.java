@@ -1,9 +1,8 @@
-package org.frustra.feather.mod.server;
+package org.frustra.feather.server;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.HookingHandler;
 
 public class Player extends Entity {
