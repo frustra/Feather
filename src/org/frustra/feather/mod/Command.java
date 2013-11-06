@@ -61,11 +61,6 @@ public abstract class Command {
 		return getUsage(new Entity(source));
 	}
 
-	@OverrideMethod("HandleExecuteCommandMethod.handleExecute")
-	private void _execute(Entity source, String[] arguments) {
-		execute(new Entity(source), arguments);
-	}
-
 	/**
 	 * Executes a command string as the server.
 	 * 
@@ -73,6 +68,11 @@ public abstract class Command {
 	 */
 	public static void execute(String command) {
 		execute(Bootstrap.minecraftServer, command);
+	}
+
+	@OverrideMethod("HandleExecuteCommandMethod.handleExecute")
+	private void _execute(Entity source, String[] arguments) {
+		execute(new Entity(source), arguments);
 	}
 
 	/**

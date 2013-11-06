@@ -20,23 +20,23 @@ public abstract class Vote {
 	 * 
 	 * @param p the voting player
 	 * @param agree if the player voted yes or no
-	 * @return true if the vote has passed
+	 * @return true if the vote was added
 	 */
 	public boolean addVote(Player p, boolean agree) {
 		if (p.karma > 0 && voters.add(p)) {
-			score += agree ? -p.karma : p.karma;
+			score += agree ? p.karma : -p.karma;
 			participating += p.karma;
 			if (hasPassed()) {
 				passed();
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}
 
 	public boolean hasPassed() {
 		// Treat the unvoted population as against the vote, until they vote
-		return (score + Bootstrap.server.totalKarma() - participating) < threshold;
+		return (score - (Bootstrap.server.totalKarma() - participating)) > threshold;
 	}
 
 	public boolean hasVoted(Player p) {

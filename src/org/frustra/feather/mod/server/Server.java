@@ -50,6 +50,15 @@ public class Server {
 	public Collection<Player> getPlayers() {
 		return players.values();
 	}
+	
+	/**
+	 * Gets the current number of players online.
+	 * 
+	 * @return the number of online players
+	 */
+	public int onlinePlayers() {
+		return players.size();
+	}
 
 	/**
 	 * Gets an in-game player by name.
