@@ -3,28 +3,21 @@ package org.frustra.feather.hooks;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassOne;
-import org.frustra.filament.hooking.types.MethodHook;
+import org.frustra.filament.hooking.types.InstructionHook;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class LoadWorldMethod extends MethodHook implements HookingPassOne {
+public class LoadWorldMethod extends InstructionHook implements HookingPassOne {
 	public boolean match(CustomClassNode node) {
 		return node.name.endsWith("MinecraftServer");
 	}
 	
-	public boolean match(CustomClassNode node, MethodNode m) {
-		AbstractInsnNode insn = m.instructions.getFirst();
-		while (insn != null) {
-			if (insn instanceof LdcInsnNode) {
-				if (((LdcInsnNode) insn).cst.toString().equals("menu.loadingLevel")) return true;
-			}
-			insn = insn.getNext();
-		}
-		return false;
+	public boolean match(CustomClassNode node, MethodNode m, AbstractInsnNode insn) {
+		return insn instanceof LdcInsnNode && ((LdcInsnNode) insn).cst.toString().equals("menu.loadingLevel");
 	}
 
-	public void onComplete(CustomClassNode node, MethodNode m) {
+	public void onComplete(CustomClassNode node, MethodNode m, AbstractInsnNode insn) {
 		Hooks.set("MinecraftServer.loadWorld", m);
 	}
 }

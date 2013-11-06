@@ -13,7 +13,7 @@ public class PlayerEntityField extends FieldHook implements HookingPassTwo {
 		return node.equals(Hooks.getClass("PlayerSocketHandler"));
 	}
 
-	protected boolean match(CustomClassNode node, FieldNode f) {
+	public boolean match(CustomClassNode node, FieldNode f) {
 		return HookingHandler.compareType(Type.getType(f.desc), "PlayerEntity");
 	}
 
