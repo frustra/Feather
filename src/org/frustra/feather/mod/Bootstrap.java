@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 
 import org.frustra.feather.Feather;
 import org.frustra.feather.hooks.MinecraftServerClass;
-import org.frustra.feather.mod.commands.Command;
 import org.frustra.feather.mod.logging.LogManager;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.feather.mod.server.Player;
@@ -25,9 +24,10 @@ public class Bootstrap {
 		Bootstrap.minecraftServer = minecraftServer;
 
 		for (String name : Feather.loader.listPackage("org.frustra.feather.mod.commands")) {
-			if (name.equals(Command.class.getName())) continue;
-			Class<?> cls = Feather.loader.loadClass(name);
-			Command.addCommand((Command) cls.newInstance());
+			if (name.endsWith("Command") && !name.equals("Command")) {
+				Class<?> cls = Feather.loader.loadClass(name);
+				Command.addCommand((Command) cls.newInstance());
+			}
 		}
 
 		Bootstrap.server = new Server();
@@ -51,7 +51,7 @@ public class Bootstrap {
 			}
 		});
 	}
-	
+
 	public static void worldLoaded() {
 		server.ready();
 	}

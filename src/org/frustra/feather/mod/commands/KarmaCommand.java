@@ -1,6 +1,9 @@
 package org.frustra.feather.mod.commands;
 
 import org.frustra.feather.mod.Bootstrap;
+import org.frustra.feather.mod.Command;
+import org.frustra.feather.mod.CommandException;
+import org.frustra.feather.mod.CommandUsageException;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.feather.mod.server.Player;
 
@@ -21,8 +24,7 @@ public class KarmaCommand extends Command {
 			targetName = arguments[1];
 			amountString = arguments[2];
 		} else {
-			source.sendMessage("Invalid usage: wrong number of arguments");
-			return; // TODO throw a ch
+			throw new CommandUsageException(this);
 		}
 
 		Player target = Bootstrap.server.getPlayer(targetName);
@@ -33,12 +35,11 @@ public class KarmaCommand extends Command {
 			} else if (arguments[0].equals("add")) {
 				target.setKarma(target.getKarma() + amount);
 			} else {
-				source.sendMessage("Invalid usage: missing action");
-				return; // TODO throw a ch
+				throw new CommandUsageException(this);
 			}
 			source.sendMessage("%s's karma set to %s", new Object[] { target, target.karma });
 		} else {
-			source.sendMessage("Target player not found");
+			throw new CommandException("Target player not found");
 		}
 	}
 

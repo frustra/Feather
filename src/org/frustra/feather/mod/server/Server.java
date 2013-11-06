@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.frustra.feather.mod.commands.Command;
+import org.frustra.feather.mod.Command;
 import org.frustra.feather.mod.voting.KickVote;
 
 public class Server {

@@ -1,6 +1,5 @@
-package org.frustra.feather.mod.commands;
+package org.frustra.feather.mod;
 
-import org.frustra.feather.mod.Bootstrap;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.filament.injection.annotations.OverrideMethod;
 import org.frustra.filament.injection.annotations.ProxyMethod;

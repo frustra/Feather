@@ -1,6 +1,6 @@
 package org.frustra.feather.mod.voting;
 
-import org.frustra.feather.mod.commands.Command;
+import org.frustra.feather.mod.Command;
 import org.frustra.feather.mod.server.Player;
 
 public class KickVote extends Vote {

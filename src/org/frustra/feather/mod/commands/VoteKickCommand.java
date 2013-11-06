@@ -1,6 +1,9 @@
 package org.frustra.feather.mod.commands;
 
 import org.frustra.feather.mod.Bootstrap;
+import org.frustra.feather.mod.Command;
+import org.frustra.feather.mod.CommandException;
+import org.frustra.feather.mod.CommandUsageException;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.feather.mod.server.Player;
 import org.frustra.feather.mod.voting.KickVote;
@@ -15,8 +18,7 @@ public class VoteKickCommand extends Command {
 		if (arguments.length == 1) {
 			Player sourcePlayer = source.getPlayer();
 			if (sourcePlayer == null || sourcePlayer.karma <= 0) {
-				source.sendMessage("Not enough karma!");
-				return;
+				throw new CommandException("Not enough karma!");
 			}
 
 			Player target = Bootstrap.server.getPlayer(arguments[1]);
@@ -29,8 +31,7 @@ public class VoteKickCommand extends Command {
 				source.sendMessage("Still need more votes to kick %s.", new Object[] { target.name });
 			}
 		} else {
-			// TODO throw a ch
-			source.sendMessage("Invalid usage.");
+			throw new CommandUsageException(this);
 		}
 	}
 
