@@ -1,34 +1,23 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.MethodHook;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
 public class HasCommandPermissionMethod extends MethodHook implements HookingPassTwo {
-	public static MethodNode hasPermission = null;
-
 	public boolean match(CustomClassNode node) {
-		return node.equals(HelpCommandClass.baseCommandInterface);
+		return node.equals(Hooks.getClass("BaseCommand"));
 	}
 
 	public boolean match(CustomClassNode node, MethodNode m) {
-		Type[] args = Type.getArgumentTypes(m.desc);
-		Type ret = Type.getReturnType(m.desc);
-		return args.length == 1 && args[0].getInternalName().equals(RconEntityClass.commandEntity.name) && ret.equals(Type.BOOLEAN_TYPE);
-	}
-
-	public void reset() {
-		super.reset();
-		hasPermission = null;
+		Type[] args = new Type[] { Type.getObjectType(Hooks.getClassName("CommandEntity")) };
+		return m.desc.equals(Type.getMethodDescriptor(Type.BOOLEAN_TYPE, args));
 	}
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
-		hasPermission = m;
-		if (Feather.debug) {
-			System.out.println("Has Command Permission Method: " + hasPermission.name + hasPermission.desc);
-		}
+		Hooks.set("Command.hasPermission", m);
 	}
 }

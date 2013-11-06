@@ -2,7 +2,6 @@ package org.frustra.feather.injectors;
 
 import java.util.List;
 
-import org.frustra.feather.hooks.LoadWorldMethod;
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.HookingHandler;
@@ -27,7 +26,7 @@ public class BootstrapInjector extends ClassInjector {
 				iList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				iList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Bootstrap.class.getName().replace('.', '/'), "bootstrap", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { Type.getType(Object.class) })));
 				method.instructions.insertBefore(method.instructions.getLast(), iList);
-			} else if (HookingHandler.compareMethodNode(method, LoadWorldMethod.loadWorld)) {
+			} else if (HookingHandler.compareMethodNode(method, "MinecraftServer.loadWorld")) {
 				InsnList iList = new InsnList();
 				iList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				iList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Bootstrap.class.getName().replace('.', '/'), "worldLoaded", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0])));

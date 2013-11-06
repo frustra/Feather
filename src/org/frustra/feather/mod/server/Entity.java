@@ -2,11 +2,9 @@ package org.frustra.feather.mod.server;
 
 import java.lang.reflect.Method;
 
-import org.frustra.feather.hooks.HelpCommandClass;
-import org.frustra.feather.hooks.RconEntityClass;
-import org.frustra.feather.hooks.SendClientMessageMethod;
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.Hooks;
 
 /**
  * Represents an entity that can issue commands. This is a helper class, which
@@ -27,7 +25,7 @@ public class Entity {
 	 */
 	public String getName() {
 		try {
-			if (_getName == null) _getName = HookingHandler.lookupMethod(RconEntityClass.commandEntity, RconEntityClass.getEntityName);
+			if (_getName == null) _getName = HookingHandler.lookupMethod(Hooks.getClass("CommandEntity"), Hooks.getMethod("CommandEntity.getName"));
 			return (String) _getName.invoke(instance);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,7 +50,7 @@ public class Entity {
 	 */
 	public void sendMessage(String str, Object[] values) {
 		try {
-			if (_sendMessage == null) _sendMessage = HookingHandler.lookupMethod(HelpCommandClass.baseCommand, SendClientMessageMethod.sendMessage);
+			if (_sendMessage == null) _sendMessage = HookingHandler.lookupMethod("Command.sendEntityMessage");
 			_sendMessage.invoke(null, instance, str, values);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,34 +1,23 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.MethodHook;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
 public class ExecuteCommandMethod extends MethodHook implements HookingPassTwo {
-	public static MethodNode executeCommand = null;
-
 	public boolean match(CustomClassNode node) {
-		return node.equals(CommandManagerClass.commandManager);
+		return node.equals(Hooks.getClass("CommandManager"));
 	}
 
 	public boolean match(CustomClassNode node, MethodNode m) {
-		Type[] args = Type.getArgumentTypes(m.desc);
-		Type ret = Type.getReturnType(m.desc);
-		return ret.equals(Type.INT_TYPE) && args.length == 2 && args[0].getInternalName().equals(RconEntityClass.commandEntity.name) && args[1].equals(Type.getType(String.class));
-	}
-
-	public void reset() {
-		super.reset();
-		executeCommand = null;
+		Type[] args = new Type[] { Type.getObjectType(Hooks.getClassName("CommandEntity")), Type.getType(String.class) };
+		return m.desc.equals(Type.getMethodDescriptor(Type.INT_TYPE, args));
 	}
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
-		executeCommand = m;
-		if (Feather.debug) {
-			System.out.println("Execute Command Method: " + executeCommand.name + executeCommand.desc);
-		}
+		Hooks.set("CommandManager.executeCommand", m);
 	}
 }

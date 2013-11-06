@@ -1,7 +1,7 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassOne;
 import org.frustra.filament.hooking.types.MethodHook;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -9,8 +9,6 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class LoadWorldMethod extends MethodHook implements HookingPassOne {
-	public static MethodNode loadWorld = null;
-
 	public boolean match(CustomClassNode node) {
 		return node.name.endsWith("MinecraftServer");
 	}
@@ -26,15 +24,7 @@ public class LoadWorldMethod extends MethodHook implements HookingPassOne {
 		return false;
 	}
 
-	public void reset() {
-		super.reset();
-		loadWorld = null;
-	}
-
 	public void onComplete(CustomClassNode node, MethodNode m) {
-		loadWorld = m;
-		if (Feather.debug) {
-			System.out.println("Load World Method: " + loadWorld.name + loadWorld.desc);
-		}
+		Hooks.set("MinecraftServer.loadWorld", m);
 	}
 }

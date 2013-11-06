@@ -2,9 +2,9 @@ package org.frustra.feather.mod;
 
 import org.frustra.filament.injection.annotations.ReplaceSuperClass;
 
-@ReplaceSuperClass("CommandExceptionClass.commandException")
+@ReplaceSuperClass("CommandException")
 public class CommandException extends CommandExceptionProxy {
-	@ReplaceSuperClass("CommandExceptionClass.commandException")
+	@ReplaceSuperClass("CommandException")
 	public CommandException(String str, Object[] obj) {
 		super(str, obj);
 	}

@@ -1,33 +1,23 @@
 package org.frustra.feather.hooks;
 
-import org.frustra.feather.Feather;
 import org.frustra.filament.hooking.CustomClassNode;
+import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.FieldHook;
 import org.frustra.filament.hooking.types.HookingPassTwo;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 
-import com.sun.xml.internal.ws.org.objectweb.asm.Type;
-
 public class PlayerEntityField extends FieldHook implements HookingPassTwo {
-	public static FieldNode entity = null;
-
 	public boolean match(CustomClassNode node) {
-		return node.name.equals(PlayerSocketHandlerClass.socketHandler.name);
+		return node.equals(Hooks.getClass("PlayerSocketHandler"));
 	}
 
 	protected boolean match(CustomClassNode node, FieldNode f) {
-		return Type.getObjectType(PlayerHandlerClass.playerEntity.name).getDescriptor().equals(f.desc);
-	}
-
-	public void reset() {
-		super.reset();
-		entity = null;
+		return HookingHandler.compareType(Type.getType(f.desc), "PlayerEntity");
 	}
 
 	public void onComplete(CustomClassNode node, FieldNode f) {
-		entity = f;
-		if (Feather.debug) {
-			System.out.println("Player Entity Field: " + entity.name);
-		}
+		Hooks.set("PlayerSocketHandler.playerEntity", f);
 	}
 }

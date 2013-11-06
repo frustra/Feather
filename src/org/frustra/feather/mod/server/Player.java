@@ -3,10 +3,6 @@ package org.frustra.feather.mod.server;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.frustra.feather.hooks.CommandTabCompletionMethod;
-import org.frustra.feather.hooks.MinecraftServerClass;
-import org.frustra.feather.hooks.PlayerHandlerClass;
-import org.frustra.feather.hooks.PlayerHandlerField;
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.HookingHandler;
 
@@ -54,8 +50,8 @@ public class Player extends Entity {
 	public boolean isOperator() {
 		try {
 			if (_isOperatorMethod == null) {
-				_playerHandlerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, PlayerHandlerField.playerHandler);
-				_isOperatorMethod = HookingHandler.lookupMethod(PlayerHandlerClass.playerHandler, CommandTabCompletionMethod.isOperator);
+				_playerHandlerField = HookingHandler.lookupField("MinecraftServer.playerHandler");
+				_isOperatorMethod = HookingHandler.lookupMethod("PlayerHandler.isOperator");
 			}
 			Object playerHandler = _playerHandlerField.get(Bootstrap.minecraftServer);
 			return (Boolean) _isOperatorMethod.invoke(playerHandler, getName());
@@ -68,22 +64,18 @@ public class Player extends Entity {
 	private static Method _isOperatorMethod = null;
 	private static Field _playerHandlerField = null;
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
 	public String toString() {
 		return name;
 	}
 
-	@Override
 	public int hashCode() {
 		return this.name.hashCode();
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Player) {
 			return name.equals(((Player) other).name);

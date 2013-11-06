@@ -3,7 +3,6 @@ package org.frustra.feather.mod;
 import java.lang.reflect.Field;
 
 import org.frustra.feather.Feather;
-import org.frustra.feather.hooks.MinecraftServerClass;
 import org.frustra.feather.mod.logging.LogManager;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.feather.mod.server.Player;
@@ -19,7 +18,7 @@ public class Bootstrap {
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		Thread.currentThread().setName("Feather");
 
-		Field commandManagerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, MinecraftServerClass.commandManager);
+		Field commandManagerField = HookingHandler.lookupField("MinecraftServer.commandManager");
 		Bootstrap.commandManager = commandManagerField.get(minecraftServer);
 		Bootstrap.minecraftServer = minecraftServer;
 

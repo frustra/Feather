@@ -13,9 +13,9 @@ import org.frustra.filament.injection.annotations.ReplaceSuperClass;
  * internal Minecraft command class, and proxies Minecraft's internal methods to
  * our own commands.
  */
-@ReplaceSuperClass("HelpCommandClass.baseCommand")
+@ReplaceSuperClass("Command")
 public abstract class Command {
-	@ReplaceSuperClass("HelpCommandClass.baseCommand")
+	@ReplaceSuperClass("Command")
 	public Command() {}
 
 	/**
@@ -25,7 +25,7 @@ public abstract class Command {
 	 */
 	public abstract String getName();
 
-	@OverrideMethod("HelpCommandClass.getCommandName")
+	@OverrideMethod("Command.getName")
 	private String _getName() {
 		return this.getName();
 	}
@@ -38,7 +38,7 @@ public abstract class Command {
 	 */
 	public abstract boolean hasPermission(Entity source);
 
-	@OverrideMethod("HasCommandPermissionMethod.hasPermission")
+	@OverrideMethod("Command.hasPermission")
 	private boolean _hasPermission(Object source) {
 		return hasPermission(new Entity(source));
 	}
@@ -60,7 +60,7 @@ public abstract class Command {
 	 */
 	public abstract String getUsage(Entity source);
 
-	@OverrideMethod("GetCommandUsageMethod.getUsage")
+	@OverrideMethod("Command.getUsage")
 	private String _getUsage(Object source) {
 		return getUsage(new Entity(source));
 	}
@@ -76,7 +76,7 @@ public abstract class Command {
 		return new ArrayList<String>();
 	}
 
-	@OverrideMethod("CommandTabCompletionMethod.tabCompletion")
+	@OverrideMethod("Command.getCompletionList")
 	private List<String> _getCompletionList(Object source, String[] arguments) {
 		return getCompletionList(new Entity(source), arguments);
 	}
@@ -90,7 +90,7 @@ public abstract class Command {
 		execute(Bootstrap.minecraftServer, command);
 	}
 
-	@OverrideMethod("HandleExecuteCommandMethod.handleExecute")
+	@OverrideMethod("Command.handleExecute")
 	private void _execute(Entity source, String[] arguments) {
 		execute(new Entity(source), arguments);
 	}
@@ -106,7 +106,7 @@ public abstract class Command {
 		_execute(Bootstrap.commandManager, source, command);
 	}
 
-	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
+	@ProxyMethod("CommandManager.executeCommand")
 	private static native int _execute(Object instance, Object source, String command);
 
 	/**
@@ -118,6 +118,6 @@ public abstract class Command {
 		_addCommand(Bootstrap.commandManager, command);
 	}
 
-	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "AddCommandMethod.addCommand")
+	@ProxyMethod("CommandManager.addCommand")
 	private static native Object _addCommand(Object instance, Object command);
 }
