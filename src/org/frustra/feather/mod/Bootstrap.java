@@ -20,15 +20,6 @@ public class Bootstrap {
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		Thread.currentThread().setName("Feather");
 
-		Bootstrap.server = new Server();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				this.setName("Feather");
-				LogManager.getLogger().info("Feather shutting down");
-				Bootstrap.server.shutdown();
-			}
-		});
-
 		Field commandManagerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, MinecraftServerClass.commandManager);
 		Bootstrap.commandManager = commandManagerField.get(minecraftServer);
 		Bootstrap.minecraftServer = minecraftServer;
@@ -38,6 +29,15 @@ public class Bootstrap {
 			Class<?> cls = Feather.loader.loadClass(name);
 			Command.addCommand((Command) cls.newInstance());
 		}
+
+		Bootstrap.server = new Server();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				this.setName("Feather");
+				LogManager.getLogger().info("Feather shutting down");
+				Bootstrap.server.shutdown();
+			}
+		});
 
 		LogManager.getLogger().info("Feather successfully bootstrapped");
 

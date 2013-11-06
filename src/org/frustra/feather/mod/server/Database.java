@@ -40,7 +40,7 @@ public class Database {
 				p.firstJoin = c.getInteger("firstJoin");
 				p.lastSeen = c.getInteger("lastSeen");
 			} else {
-				p.firstJoin = p.seen();
+				p.firstJoin = p.lastSeen = System.currentTimeMillis() / 1000;
 			}
 			c.close();
 			db.commit();

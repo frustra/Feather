@@ -1,8 +1,13 @@
 package org.frustra.feather.mod.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.frustra.feather.mod.commands.Command;
 import org.frustra.feather.mod.voting.KickVote;
 
 public class Server {
@@ -19,6 +24,13 @@ public class Server {
 	 */
 	public Server() throws Exception {
 		db = new Database();
+
+		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+		executor.scheduleAtFixedRate(new UpdateKarmaTask(), 1, 1, TimeUnit.MINUTES);
+	}
+
+	public void ready() {
+		Command.execute("scoreboard objectives add karma dummy K");
 	}
 
 	/**
@@ -29,7 +41,16 @@ public class Server {
 	}
 
 	/**
-	 * Gets a player currently in the game.
+	 * Gets all in-game players.
+	 * 
+	 * @return the collection of players
+	 */
+	public Collection<Player> getPlayers() {
+		return players.values();
+	}
+
+	/**
+	 * Gets an in-game player by name.
 	 * 
 	 * @param name the player's username
 	 * @return the player instance
@@ -50,6 +71,7 @@ public class Server {
 			p = db.fetchPlayer(name);
 			if (p != null) {
 				p.seen();
+				p.lastKarmaUpdate = p.lastSeen;
 				db.savePlayer(p);
 				players.put(name.toLowerCase(), p);
 			}
@@ -68,6 +90,11 @@ public class Server {
 			p.seen();
 			db.savePlayer(p);
 		}
+	}
+
+	public void updatePlayer(Player player) {
+		db.savePlayer(player);
+		Command.execute("scoreboard players set " + player.getName() + " karma " + (long) player.getKarma());
 	}
 
 	/**
@@ -105,7 +132,8 @@ public class Server {
 	}
 
 	/**
-	 * Adds the specified player listener to receive player join and leave events.
+	 * Adds the specified player listener to receive player join and leave
+	 * events.
 	 * 
 	 * @param listener the player listener
 	 */

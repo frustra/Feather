@@ -84,7 +84,7 @@ public abstract class Command {
 	 * @param command the command string
 	 */
 	public static void execute(Object source, String command) {
-		_execute(Bootstrap.commandManager, (Command) source, command);
+		_execute(Bootstrap.commandManager, source, command);
 	}
 
 	@ProxyMethod(classHook = "CommandManagerClass.commandManager", methodHook = "ExecuteCommandMethod.executeCommand")
