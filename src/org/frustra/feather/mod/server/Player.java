@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 
 import org.frustra.feather.hooks.CommandTabCompletionMethod;
 import org.frustra.feather.hooks.MinecraftServerClass;
-import org.frustra.feather.hooks.PlayerConnectionHandlerClass;
-import org.frustra.feather.hooks.PlayerConnectionHandlerField;
+import org.frustra.feather.hooks.PlayerHandlerClass;
+import org.frustra.feather.hooks.PlayerHandlerField;
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.filament.hooking.HookingHandler;
 
@@ -44,12 +44,17 @@ public class Player extends Entity {
 		Bootstrap.server.updatePlayer(this);
 	}
 
+	private static Method _isOperatorMethod = null;
+	private static Field _playerHandlerField = null;
+
 	public boolean isOperator() {
 		try {
-			Field playerConnectionHandlerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, PlayerConnectionHandlerField.playerConnectionHandler);
-			Object playerConnectionHandler = playerConnectionHandlerField.get(Bootstrap.minecraftServer);
-			Method isOperatorMethod = HookingHandler.lookupMethod(PlayerConnectionHandlerClass.connectionHandler, CommandTabCompletionMethod.isOperator);
-			return (Boolean) isOperatorMethod.invoke(playerConnectionHandler, getName());
+			if (_isOperatorMethod == null) {
+				_playerHandlerField = HookingHandler.lookupField(MinecraftServerClass.minecraftServer, PlayerHandlerField.playerHandler);
+				_isOperatorMethod = HookingHandler.lookupMethod(PlayerHandlerClass.playerHandler, CommandTabCompletionMethod.isOperator);
+			}
+			Object playerHandler = _playerHandlerField.get(Bootstrap.minecraftServer);
+			return (Boolean) _isOperatorMethod.invoke(playerHandler, getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

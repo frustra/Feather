@@ -16,7 +16,7 @@ public class PlayerEntityField extends FieldHook implements HookingPassTwo {
 	}
 
 	protected boolean match(CustomClassNode node, FieldNode f) {
-		return Type.getObjectType(PlayerConnectionHandlerClass.playerEntity.name).getDescriptor().equals(f.desc);
+		return Type.getObjectType(PlayerHandlerClass.playerEntity.name).getDescriptor().equals(f.desc);
 	}
 
 	public void reset() {

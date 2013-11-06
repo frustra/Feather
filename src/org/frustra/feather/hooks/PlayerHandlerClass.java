@@ -11,8 +11,8 @@ import org.objectweb.asm.tree.MethodNode;
 
 import com.sun.xml.internal.ws.org.objectweb.asm.Type;
 
-public class PlayerConnectionHandlerClass extends MethodHook implements HookingPassOne {
-	public static CustomClassNode connectionHandler = null;
+public class PlayerHandlerClass extends MethodHook implements HookingPassOne {
+	public static CustomClassNode playerHandler = null;
 	public static MethodNode playerJoined = null;
 	public static CustomClassNode playerEntity = null;
 
@@ -35,18 +35,18 @@ public class PlayerConnectionHandlerClass extends MethodHook implements HookingP
 
 	public void reset() {
 		super.reset();
-		connectionHandler = null;
+		playerHandler = null;
 		playerJoined = null;
 		playerEntity = null;
 	}
 
 	public void onComplete(CustomClassNode node, MethodNode m) {
-		connectionHandler = node;
+		playerHandler = node;
 		playerJoined = m;
 		Type[] args = Type.getArgumentTypes(m.desc);
 		playerEntity = HookingHandler.getClassNode(args[1].getInternalName());
 		if (Feather.debug) {
-			System.out.println("Player Connection Handler Class: " + connectionHandler.name);
+			System.out.println("Player Handler Class: " + playerHandler.name);
 			System.out.println("Player Joined Method: " + playerJoined.name + playerJoined.desc);
 			System.out.println("Player Entity Class: " + playerEntity.name);
 		}

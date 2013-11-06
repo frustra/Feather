@@ -33,7 +33,7 @@ public class CommandTabCompletionMethod extends MethodHook implements HookingPas
 				curr = (MethodInsnNode) insn;
 				if (curr.getOpcode() == Opcodes.INVOKEVIRTUAL) {
 					String matchingDesc = Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] { Type.getType(String.class) });
-					if (lastReturnType != null && lastReturnType.getInternalName().equals(PlayerConnectionHandlerClass.connectionHandler.name) && curr.desc.equals(matchingDesc)) {
+					if (lastReturnType != null && lastReturnType.getInternalName().equals(PlayerHandlerClass.playerHandler.name) && curr.desc.equals(matchingDesc)) {
 						isOperator = new MethodNode(Opcodes.ACC_PUBLIC, curr.name, curr.desc, null, null);
 						break;
 					}
