@@ -67,4 +67,16 @@ public class Entity {
 	public Player getPlayer() {
 		return Bootstrap.server.getPlayer(this.getName());
 	}
+
+	/**
+	 * Returns whether the entity is an operator or not. This will only return
+	 * false if the entity is a player.
+	 * 
+	 * @return true if the entity is an operator
+	 */
+	public boolean isOperator() {
+		Player p = getPlayer();
+		if (p == null) return true;
+		return p.isOperator();
+	}
 }

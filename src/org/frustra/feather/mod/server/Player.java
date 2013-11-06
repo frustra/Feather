@@ -21,14 +21,11 @@ public class Player extends Entity {
 		this.name = name;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String toString() {
-		return name;
-	}
-
+	/**
+	 * Indicates that the player was just seen
+	 * 
+	 * @return
+	 */
 	public long seen() {
 		this.lastSeen = System.currentTimeMillis() / 1000;
 		Bootstrap.server.updatePlayer(this);
@@ -39,14 +36,19 @@ public class Player extends Entity {
 		return karma;
 	}
 
+	/**
+	 * Sets the player's karma, and updates them across the server and database
+	 * 
+	 * @param karma
+	 */
 	public void setKarma(double karma) {
 		this.karma = karma;
 		Bootstrap.server.updatePlayer(this);
 	}
 
-	private static Method _isOperatorMethod = null;
-	private static Field _playerHandlerField = null;
-
+	/**
+	 * @return true if the player is an operator
+	 */
 	public boolean isOperator() {
 		try {
 			if (_isOperatorMethod == null) {
@@ -61,10 +63,25 @@ public class Player extends Entity {
 		return false;
 	}
 
+	private static Method _isOperatorMethod = null;
+	private static Field _playerHandlerField = null;
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	@Override
 	public int hashCode() {
 		return this.name.hashCode();
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Player) {
 			return name.equals(((Player) other).name);

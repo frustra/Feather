@@ -13,9 +13,7 @@ public class KarmaCommand extends Command {
 	}
 
 	public boolean hasPermission(Entity source) {
-		Player p = source.getPlayer();
-		if (p == null) return true;
-		return p.isOperator();
+		return source.isOperator();
 	}
 
 	public void execute(Entity source, String[] arguments) {
