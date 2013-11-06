@@ -2,6 +2,8 @@ package org.frustra.feather.mod.commands;
 
 import org.frustra.feather.mod.Bootstrap;
 import org.frustra.feather.mod.Command;
+import org.frustra.feather.mod.CommandException;
+import org.frustra.feather.mod.CommandUsageException;
 import org.frustra.feather.mod.server.Entity;
 import org.frustra.feather.mod.server.Player;
 import org.frustra.feather.mod.voting.KickVote;
@@ -16,54 +18,54 @@ public class VoteCommand extends Command {
 		if (arguments.length >= 1 && arguments.length <= 2) {
 			Player sourcePlayer = source.getPlayer();
 			if (sourcePlayer == null || sourcePlayer.karma <= 0) {
-				source.sendMessage("You need positive karma to use this command.");
-				return;
+				throw new CommandException("You need positive karma to use this command");
 			}
 			
 			if (arguments[0].equals("kick") && arguments.length == 2) {
 				Player target = Bootstrap.server.getPlayer(arguments[1]);
 				if (target != null) {
+					if (sourcePlayer.equals(target)) throw new CommandException("You cannot vote kick yourself");
 					KickVote vote = Bootstrap.server.activeKickVotes.get(target);
 					if (vote == null) {
-						vote = Bootstrap.server.activeKickVotes.put(target, new KickVote(target));
-						Command.execute("tellraw @a {\"text\":\"A vote kick has been initiated on " + target.name + "\",\"color\":\"dark_blue\"}");
-						Command.execute("tellraw @a {\"text\":\"Use /vote <yes|no> to respond.\",\"color\":\"dark_blue\"}");
+						vote = new KickVote(target);
+						Bootstrap.server.activeKickVotes.put(target, vote);
+						Command.execute("tellraw @a {\"text\":\"A vote kick has been initiated on " + target.name + "\",\"color\":\"blue\"}");
+						for (Player p : Bootstrap.server.getPlayers()) {
+							if (!p.equals(sourcePlayer) && !p.equals(target)) {
+								Command.execute("tellraw " + p.name + " {\"text\":\"Use /vote <yes|no> to respond.\",\"color\":\"blue\"}");
+							}
+						}
 					}
 
 					vote.addVote(sourcePlayer, true);
 				} else {
-					source.sendMessage("This player is not currently online.");
-					return;
+					throw new CommandException("This player is not currently online.");
 				}
 			} else if (arguments[0].equals("yes") || arguments[0].equals("no")) {
 				if (Bootstrap.server.activeKickVotes.size() < 1) {
-					source.sendMessage("There are no active votes, use /vote kick to start one.");
-					return;
+					throw new CommandException("There are no active votes, use /vote kick to start one");
 				} else if (arguments.length == 2) {
 					Player target = Bootstrap.server.getPlayer(arguments[1]);
+					if (sourcePlayer.equals(target)) throw new CommandException("You cannot vote on yourself");
 					KickVote vote = Bootstrap.server.activeKickVotes.get(target);
 					if (vote != null) {
 						vote.addVote(sourcePlayer, arguments[0].equals("yes"));
 					} else {
-						source.sendMessage("There are no active votes for this player.");
-						return;
+						throw new CommandException("There are no active votes for this player.");
 					}
 				} else {
 					if (Bootstrap.server.activeKickVotes.size() > 2) {
-						source.sendMessage("There is more than one active vote, please specify a player.");
-						return;
+						throw new CommandException("There is more than one active vote, please specify a player");
 					} else {
 						KickVote vote = Bootstrap.server.activeKickVotes.values().iterator().next();
 						vote.addVote(sourcePlayer, arguments[0].equals("yes"));
 					}
 				}
 			} else {
-				// TODO throw a ch
-				source.sendMessage("Invalid usage.");
+				throw new CommandUsageException(this);
 			}
 		} else {
-			// TODO throw a ch
-			source.sendMessage("Invalid usage.");
+			throw new CommandUsageException(this);
 		}
 	}
 
