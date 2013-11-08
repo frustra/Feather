@@ -72,12 +72,12 @@ public class Player extends Entity {
 	}
 
 	public int hashCode() {
-		return this.name.hashCode();
+		return this.name.toLowerCase().hashCode();
 	}
 
 	public boolean equals(Object other) {
 		if (other instanceof Player) {
-			return name.equals(((Player) other).name);
+			return name.toLowerCase().equals(((Player) other).name.toLowerCase());
 		}
 		return false;
 	}

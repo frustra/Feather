@@ -20,7 +20,7 @@ public class VoteCommand extends Command {
 			if (sourcePlayer == null || sourcePlayer.karma <= 0) {
 				throw new CommandException("You need positive karma to use this command");
 			}
-			
+
 			if (arguments[0].equals("kick") && arguments.length == 2) {
 				Player target = Bootstrap.server.getPlayer(arguments[1]);
 				if (target != null) {
@@ -32,7 +32,7 @@ public class VoteCommand extends Command {
 						Command.execute("tellraw @a {\"text\":\"A vote kick has been initiated on " + target.name + "\",\"color\":\"blue\"}");
 						for (Player p : Bootstrap.server.getPlayers()) {
 							if (!p.equals(sourcePlayer) && !p.equals(target)) {
-								Command.execute("tellraw " + p.name + " {\"text\":\"Use /vote <yes|no> to respond.\",\"color\":\"blue\"}");
+								Command.execute("tellraw " + p.name + " {\"text\":\"Use /vote <yes|no> [player] to respond.\",\"color\":\"blue\"}");
 							}
 						}
 					}
