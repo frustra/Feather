@@ -1,5 +1,9 @@
 /bin
+/deps
+
 /lib/minecraft_server.jar
+/Feather.jar
+
 /logs
 /world
 /ops.txt
