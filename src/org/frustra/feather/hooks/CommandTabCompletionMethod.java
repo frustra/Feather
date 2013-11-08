@@ -2,8 +2,9 @@ package org.frustra.feather.hooks;
 
 import java.util.List;
 
+import org.frustra.filament.hooking.BadHookException;
 import org.frustra.filament.hooking.CustomClassNode;
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.InstructionHook;
@@ -19,16 +20,16 @@ public class CommandTabCompletionMethod extends InstructionHook implements Hooki
 		return node.constants.contains("commands.op.success");
 	}
 
-	public boolean match(CustomClassNode node, MethodNode m) {
+	public boolean match(CustomClassNode node, MethodNode m) throws BadHookException {
 		Type[] args = new Type[] { Type.getObjectType(Hooks.getClassName("CommandEntity")), Type.getType(String[].class) };
 		return m.desc.equals(Type.getMethodDescriptor(Type.getType(List.class), args));
 	}
 
 	private final String matchingDesc = Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] { Type.getType(String.class) });
 	private Type lastReturnType = null;
-	public boolean match(CustomClassNode node, MethodNode m, AbstractInsnNode insn) {
+	public boolean match(CustomClassNode node, MethodNode m, AbstractInsnNode insn) throws BadHookException {
 		if (insn.getOpcode() == Opcodes.INVOKEVIRTUAL) {
-			if (HookingHandler.compareType(lastReturnType, "PlayerHandler") && ((MethodInsnNode) insn).desc.equals(matchingDesc)) return true;
+			if (HookUtil.compareType(lastReturnType, "PlayerHandler") && ((MethodInsnNode) insn).desc.equals(matchingDesc)) return true;
 			lastReturnType = Type.getReturnType(((MethodInsnNode) insn).desc);
 		}
 		return false;

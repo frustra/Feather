@@ -1,7 +1,7 @@
 package org.frustra.feather.hooks;
 
 import org.frustra.filament.hooking.CustomClassNode;
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.ClassHook;
 import org.frustra.filament.hooking.types.HookingPassOne;
@@ -13,6 +13,6 @@ public class CommandManagerClass extends ClassHook implements HookingPassOne {
 
 	public void onComplete(CustomClassNode node) {
 		Hooks.set("CommandManager", node);
-		Hooks.set("BaseCommandManager", HookingHandler.getClassNode((String) node.interfaces.get(0)));
+		Hooks.set("BaseCommandManager", HookUtil.getClassNode((String) node.interfaces.get(0)));
 	}
 }

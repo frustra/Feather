@@ -1,7 +1,7 @@
 package org.frustra.feather.hooks;
 
 import org.frustra.filament.hooking.CustomClassNode;
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassOne;
 import org.frustra.filament.hooking.types.InstructionHook;
@@ -25,7 +25,7 @@ public class RconEntityClass extends InstructionHook implements HookingPassOne {
 
 	public void onComplete(CustomClassNode node, MethodNode m, AbstractInsnNode insn) {
 		Hooks.set("RconEntity", node);
-		Hooks.set("CommandEntity", HookingHandler.getClassNode((String) node.interfaces.get(0)));
+		Hooks.set("CommandEntity", HookUtil.getClassNode((String) node.interfaces.get(0)));
 		Hooks.set("CommandEntity.getName", m);
 	}
 }

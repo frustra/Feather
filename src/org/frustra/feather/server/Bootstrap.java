@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 import org.frustra.feather.Feather;
 import org.frustra.feather.server.logging.LogManager;
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 
 public class Bootstrap {
 	public static Object minecraftServer = null;
@@ -14,7 +14,7 @@ public class Bootstrap {
 	public static void bootstrap(Object minecraftServer) throws Exception {
 		Thread.currentThread().setName("Feather");
 
-		Field commandManagerField = HookingHandler.lookupField("MinecraftServer.commandManager");
+		Field commandManagerField = HookUtil.lookupField("MinecraftServer.commandManager");
 		Bootstrap.commandManager = commandManagerField.get(minecraftServer);
 		Bootstrap.minecraftServer = minecraftServer;
 

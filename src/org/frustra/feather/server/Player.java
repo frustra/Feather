@@ -3,7 +3,7 @@ package org.frustra.feather.server;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 
 public class Player extends Entity {
 	public final String name;
@@ -49,8 +49,8 @@ public class Player extends Entity {
 	public boolean isOperator() {
 		try {
 			if (_isOperatorMethod == null) {
-				_playerHandlerField = HookingHandler.lookupField("MinecraftServer.playerHandler");
-				_isOperatorMethod = HookingHandler.lookupMethod("PlayerHandler.isOperator");
+				_playerHandlerField = HookUtil.lookupField("MinecraftServer.playerHandler");
+				_isOperatorMethod = HookUtil.lookupMethod("PlayerHandler.isOperator");
 			}
 			Object playerHandler = _playerHandlerField.get(Bootstrap.minecraftServer);
 			return (Boolean) _isOperatorMethod.invoke(playerHandler, getName());

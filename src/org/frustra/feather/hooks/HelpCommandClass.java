@@ -1,7 +1,7 @@
 package org.frustra.feather.hooks;
 
 import org.frustra.filament.hooking.CustomClassNode;
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassOne;
 import org.frustra.filament.hooking.types.InstructionHook;
@@ -24,10 +24,10 @@ public class HelpCommandClass extends InstructionHook implements HookingPassOne 
 	}
 
 	public void onComplete(CustomClassNode node, MethodNode m, AbstractInsnNode insn) {
-		CustomClassNode commandClass = HookingHandler.getClassNode(node.superName);
+		CustomClassNode commandClass = HookUtil.getClassNode(node.superName);
 		Hooks.set("HelpCommand", node);
 		Hooks.set("Command", commandClass);
-		Hooks.set("BaseCommand", HookingHandler.getClassNode((String) commandClass.interfaces.get(0)));
+		Hooks.set("BaseCommand", HookUtil.getClassNode((String) commandClass.interfaces.get(0)));
 		Hooks.set("Command.getName", m);
 	}
 }

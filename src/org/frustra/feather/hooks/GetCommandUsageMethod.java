@@ -1,5 +1,6 @@
 package org.frustra.feather.hooks;
 
+import org.frustra.filament.hooking.BadHookException;
 import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassTwo;
@@ -10,8 +11,8 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class GetCommandUsageMethod extends InstructionHook implements HookingPassTwo {
-	public boolean match(CustomClassNode node) {
-		return node.equals(Hooks.getClass("HelpCommand"));
+	public boolean match(CustomClassNode node) throws BadHookException {
+		return node.matches("HelpCommand");
 	}
 
 	public boolean match(CustomClassNode node, MethodNode m) {

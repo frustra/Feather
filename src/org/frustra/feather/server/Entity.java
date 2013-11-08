@@ -2,7 +2,7 @@ package org.frustra.feather.server;
 
 import java.lang.reflect.Method;
 
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 
 /**
@@ -24,7 +24,7 @@ public class Entity {
 	 */
 	public String getName() {
 		try {
-			if (_getName == null) _getName = HookingHandler.lookupMethod(Hooks.getClass("CommandEntity"), Hooks.getMethod("CommandEntity.getName"));
+			if (_getName == null) _getName = HookUtil.lookupMethod(Hooks.getClass("CommandEntity"), Hooks.getMethod("CommandEntity.getName"));
 			return (String) _getName.invoke(instance);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,7 +49,7 @@ public class Entity {
 	 */
 	public void sendMessage(String str, Object[] values) {
 		try {
-			if (_sendMessage == null) _sendMessage = HookingHandler.lookupMethod("Command.sendEntityMessage");
+			if (_sendMessage == null) _sendMessage = HookUtil.lookupMethod("Command.sendEntityMessage");
 			_sendMessage.invoke(null, instance, str, values);
 		} catch (Exception e) {
 			e.printStackTrace();

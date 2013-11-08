@@ -1,7 +1,7 @@
 package org.frustra.feather.hooks;
 
 import org.frustra.filament.hooking.CustomClassNode;
-import org.frustra.filament.hooking.HookingHandler;
+import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassOne;
 import org.frustra.filament.hooking.types.InstructionHook;
@@ -28,6 +28,6 @@ public class PlayerHandlerClass extends InstructionHook implements HookingPassOn
 		Type[] args = Type.getArgumentTypes(m.desc);
 		Hooks.set("PlayerHandler", node);
 		Hooks.set("PlayerHandler.playerJoined", m);
-		Hooks.set("PlayerEntity", HookingHandler.getClassNode(args[1].getInternalName()));
+		Hooks.set("PlayerEntity", HookUtil.getClassNode(args[1].getInternalName()));
 	}
 }

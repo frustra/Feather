@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 
 import org.frustra.feather.server.logging.LogManager;
 import org.frustra.filament.FilamentClassLoader;
-import org.frustra.filament.hooking.HookingHandler;
-import org.frustra.filament.injection.InjectionHandler;
+import org.frustra.filament.hooking.Hooking;
+import org.frustra.filament.injection.Injection;
 
 public class Feather {
 	public static final String version = "1.0.0";
@@ -43,8 +43,8 @@ public class Feather {
 			loader.loadPackage(packageName);
 		}
 
-		HookingHandler.loadHooks("org.frustra.feather.hooks");
-		InjectionHandler.loadInjectors("org.frustra.feather.injectors");
+		Hooking.loadHooks("org.frustra.feather.hooks");
+		Injection.loadInjectors("org.frustra.feather.injectors");
 
 		Class<?> cls = loader.loadClass("net.minecraft.server.MinecraftServer");
 		Method entryPoint = cls.getDeclaredMethod("main", new Class[] { String[].class });
