@@ -27,9 +27,8 @@ public class VoteCommand extends Command {
 					if (sourcePlayer.equals(target)) throw new CommandException("You cannot vote kick yourself");
 					KickVote vote = Bootstrap.server.activeKickVotes.get(target);
 					if (vote == null) {
-						vote = new KickVote(target);
-						Bootstrap.server.activeKickVotes.put(target, vote);
 						Command.execute("tellraw @a {\"text\":\"A vote kick has been initiated on " + target.name + "\",\"color\":\"blue\"}");
+						vote = new KickVote(target);
 						for (Player p : Bootstrap.server.getPlayers()) {
 							if (!p.equals(sourcePlayer) && !p.equals(target)) {
 								Command.execute("tellraw " + p.name + " {\"text\":\"Use /vote <yes|no> [player] to respond.\",\"color\":\"blue\"}");

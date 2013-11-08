@@ -10,6 +10,7 @@ public class KickVote extends Vote {
 	public KickVote(Player target) {
 		super(0, 120);
 		this.target = target;
+		Bootstrap.server.activeKickVotes.put(target, this);
 		addVote(target, false);
 	}
 

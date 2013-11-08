@@ -47,6 +47,7 @@ public abstract class Vote {
 	 * @return true if the vote was counted
 	 */
 	public boolean addVote(Player p, boolean agree) {
+		if (completed) return false;
 		if (p.karma > 0 && eligibleVoters.contains(p) && voters.add(p)) {
 			score += agree ? p.karma : -p.karma;
 			participating += p.karma;
