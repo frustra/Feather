@@ -2,17 +2,24 @@ package org.frustra.feather.server.voting;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.frustra.feather.server.Bootstrap;
 import org.frustra.feather.server.Player;
 
 public abstract class Vote {
 	public double score = 0, participating = 0, eligibleKarma, threshold;
+	public long timeout;
 	public Set<Player> voters;
 	public Set<Player> eligibleVoters;
 
-	public Vote(double threshold) {
+	private boolean completed = false;
+
+	public Vote(double threshold, long timeout) {
 		this.threshold = threshold;
+		this.timeout = timeout;
 		voters = new HashSet<Player>();
 		eligibleVoters = new HashSet<Player>();
 		for (Player p : Bootstrap.server.getPlayers()) {
@@ -21,6 +28,15 @@ public abstract class Vote {
 				eligibleKarma += p.getKarma();
 			}
 		}
+
+		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+		executor.schedule(new Runnable() {
+			public void run() {
+				if (!completed) {
+					timeout();
+				}
+			}
+		}, timeout, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -35,8 +51,10 @@ public abstract class Vote {
 			score += agree ? p.karma : -p.karma;
 			participating += p.karma;
 			if (hasPassed()) {
+				completed = true;
 				passed();
 			} else if (hasFailed()) {
+				completed = true;
 				failed();
 			}
 			return true;

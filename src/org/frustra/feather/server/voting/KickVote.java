@@ -8,7 +8,7 @@ public class KickVote extends Vote {
 	public Player target;
 
 	public KickVote(Player target) {
-		super(0);
+		super(0, 120);
 		this.target = target;
 		addVote(target, false);
 	}
@@ -22,18 +22,26 @@ public class KickVote extends Vote {
 	}
 
 	public void passed() {
-		Command.execute("kick " + target.name + " You have been voted off the server.");
-		Command.execute("tellraw @a {\"text\":\"" + target.name + " has been voted off the server\",\"color\":\"blue\"}");
-		Bootstrap.server.activeKickVotes.remove(target);
+		// Lose between 1 and 10 karma, depending on the proportion of kick agreement
+		double lostKarma = Math.ceil(score / eligibleKarma * 10);
+		target.setKarma(target.karma - lostKarma);
+
+		Command.execute("kick " + target.name + " You have been voted off the server, and lost " + lostKarma + " karma.");
+		Command.execute("tellraw @a {\"text\":\"" + target.name + " has been voted off the server, and lost " + lostKarma + " karma\",\"color\":\"blue\"}");
+		finish();
 	}
 
 	public void failed() {
 		Command.execute("tellraw @a {\"text\":\"The vote to kick " + target.name + " has failed\",\"color\":\"blue\"}");
-		Bootstrap.server.activeKickVotes.remove(target);
+		finish();
 	}
 
 	public void timeout() {
 		Command.execute("tellraw @a {\"text\":\"Not enough players voted to kick " + target.name + "\",\"color\":\"blue\"}");
+		finish();
+	}
+
+	public void finish() {
 		Bootstrap.server.activeKickVotes.remove(target);
 	}
 }
