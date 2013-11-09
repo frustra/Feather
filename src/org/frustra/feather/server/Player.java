@@ -66,6 +66,7 @@ public class Player extends Entity {
 
 	public void makeAllowedOperator() {
 		level = Math.max(level, 10);
+		Bootstrap.server.updatePlayer(this);
 	}
 
 	private static Method _isOperatorMethod = null;
