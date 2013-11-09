@@ -17,20 +17,24 @@ public class OpUpCommand extends Command {
 			Command.execute("op " + source.getName());
 			source.sendMessage("You now have op");
 		} else if (arguments.length == 1) {
-			Player target = Bootstrap.server.fetchPlayer(arguments[1]);
+			Player target = Bootstrap.server.fetchPlayer(arguments[0]);
 			if (target == null) {
 				throw new CommandException(target + " hasn't played here");
 			} else {
-				target.makeAllowedOperator();
-				target.sendMessage("You now have access to /opup");
-				source.sendMessage(target + " now has access to /opup");
+				if (target.isAllowedOperator() || target.isOperator()) {
+					throw new CommandException(target + " is already allowed to /opup");
+				} else {
+					target.makeAllowedOperator();
+					target.sendMessage("You now have access to /opup");
+					source.sendMessage(target + " now has access to /opup");
+				}
 			}
 		} else throw new CommandUsageException(this);
 	}
 
 	public boolean hasPermission(Entity source) {
 		Player p = source.getPlayer();
-		return p == null || p.isAllowedOperator();
+		return p == null || p.isAllowedOperator() || p.isOperator();
 	}
 
 	public String getUsage(Entity source) {

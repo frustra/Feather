@@ -26,11 +26,11 @@ public class InfoCommand extends Command {
 		Calendar now = Calendar.getInstance();
 		Calendar cal = Calendar.getInstance();
 
-		SimpleDateFormat format = new SimpleDateFormat("M d HH:mm");
+		SimpleDateFormat format = new SimpleDateFormat("MMM d 'at' HH:mm");
 		Date date = new Date(unix * 1000);
 		cal.setTime(date);
 		if (cal.get(Calendar.YEAR) != now.get(Calendar.YEAR)) {
-			format = new SimpleDateFormat("M d, y HH:mm");
+			format = new SimpleDateFormat("MMM d, yyyy 'at' HH:mm");
 		}
 		return format.format(date);
 	}
@@ -42,7 +42,7 @@ public class InfoCommand extends Command {
 			if (target == null) {
 				throw new CommandException(target + " hasn't played here");
 			} else {
-				String lastSeenString = "is currently playing";
+				String lastSeenString = "is currently online";
 				if (target.instance == null) {
 					lastSeenString = "was last seen " + formatDate(target.lastSeen);
 				}
