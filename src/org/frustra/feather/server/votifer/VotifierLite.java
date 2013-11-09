@@ -22,9 +22,11 @@ import java.util.Scanner;
 import javax.crypto.Cipher;
 import javax.xml.bind.DatatypeConverter;
 
+import org.frustra.feather.server.logging.LogManager;
+
 public class VotifierLite extends Thread {
-	public static List<VoteListener> listeners = new ArrayList<VoteListener>();
-	public static PrivateKey privateKey;
+	private List<VoteListener> listeners = new ArrayList<VoteListener>();
+	private PrivateKey privateKey;
 	
 	public boolean running = false;
 	
@@ -34,6 +36,8 @@ public class VotifierLite extends Thread {
 			if (!folder.exists()) {
 				folder.mkdir();
 
+				LogManager.syslog("Creating new votifier RSA keypair");
+				
 				KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
 				RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4);
 				keygen.initialize(spec);
@@ -61,17 +65,21 @@ public class VotifierLite extends Thread {
 				privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(buf));
 			}
 		} catch (Exception e) {
-			System.err.println("Error reading RSA key");
+			LogManager.syserr("Error reading votifier RSA key");
 			e.printStackTrace();
 			return;
 		}
 	}
 
 	public void run() {
+		setName("VotifierLite");
+		
 		ServerSocket server = null;
 		try {
 			server = new ServerSocket(8192);
 			running = true;
+			
+			LogManager.getLogger().info("Listening for votes on port 8192");
 			
 			while (running) {
 				try {
@@ -115,7 +123,7 @@ public class VotifierLite extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Error listening on port 8192");
+			LogManager.getLogger().error("Error listening on port 8192");
 			e.printStackTrace();
 		} finally {
 			try {
@@ -124,11 +132,11 @@ public class VotifierLite extends Thread {
 		}
 	}
 	
-	public static void addVoteListener(VoteListener listener) {
+	public void addVoteListener(VoteListener listener) {
 		listeners.add(listener);
 	}
 	
-	public static void removeVoteListener(VoteListener listener) {
+	public void removeVoteListener(VoteListener listener) {
 		listeners.remove(listener);
 	}
 }

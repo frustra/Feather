@@ -7,12 +7,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.frustra.feather.server.votifer.VoteListener;
+import org.frustra.feather.server.votifer.VotifierLite;
 import org.frustra.feather.server.voting.KickVote;
 
-public class Server {
+public class Server implements VoteListener {
 	private Database db;
 	private HashMap<String, Player> players = new HashMap<String, Player>();
 	private ArrayList<PlayerListener> playerListeners = new ArrayList<PlayerListener>();
+	private VotifierLite votifier;
 
 	public HashMap<Player, KickVote> activeKickVotes = new HashMap<Player, KickVote>();
 
@@ -23,6 +26,9 @@ public class Server {
 	 */
 	public Server() throws Exception {
 		db = new Database();
+		votifier = new VotifierLite();
+		votifier.init();
+		votifier.addVoteListener(this);
 
 		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 		executor.scheduleAtFixedRate(new UpdateKarmaTask(), 1, 1, TimeUnit.MINUTES);
@@ -32,12 +38,15 @@ public class Server {
 		Command.execute("scoreboard objectives add karma dummy K");
 		Command.execute("scoreboard objectives setdisplay list karma");
 		Command.execute("scoreboard objectives setdisplay belowName karma");
+		
+		votifier.start();
 	}
 
 	/**
 	 * Gracefully shuts down the server and database
 	 */
 	public void shutdown() {
+		votifier.running = false;
 		db.close();
 	}
 
@@ -179,5 +188,9 @@ public class Server {
 			}
 			unloadPlayer(entity.getName());
 		}
+	}
+
+	public void voteReceived(String service, String username, String address, String timestamp) {
+		System.out.println(service + " : " + username + " : " + address + " : " + timestamp);
 	}
 }
