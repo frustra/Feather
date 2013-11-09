@@ -19,9 +19,9 @@ public class OpUpCommand extends Command {
 		} else if (arguments.length == 1) {
 			Player target = Bootstrap.server.fetchPlayer(arguments[0]);
 			if (target == null) {
-				throw new CommandException(target + " hasn't played here");
+				throw new CommandException(arguments[0] + " hasn't played here");
 			} else {
-				if (target.isAllowedOperator() || target.isOperator()) {
+				if (target.isAllowedOperator()) {
 					throw new CommandException(target + " is already allowed to /opup");
 				} else {
 					target.makeAllowedOperator();
