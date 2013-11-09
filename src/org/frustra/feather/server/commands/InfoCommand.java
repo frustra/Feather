@@ -38,16 +38,16 @@ public class InfoCommand extends Command {
 	public void execute(Entity source, String[] arguments) {
 		if (arguments.length == 1) {
 			Player target = Bootstrap.server.fetchPlayer(arguments[0]);
-
 			if (target == null) {
 				throw new CommandException(target + " hasn't played here");
-			} else {
-				String lastSeenString = "is currently online";
-				if (target.instance == null) {
-					lastSeenString = "was last seen " + formatDate(target.lastSeen);
-				}
-				source.sendMessage("%s has %s karma, first joined %s, and %s", new Object[] { target, target.karma, formatDate(target.firstJoin), lastSeenString });
 			}
+
+			String lastSeenString = "is currently online";
+			if (target.instance == null) {
+				lastSeenString = "was last seen " + formatDate(target.lastSeen);
+			}
+
+			source.sendMessage("%s has %s karma, first joined %s, and %s", new Object[] { target, target.karma, formatDate(target.firstJoin), lastSeenString });
 		} else {
 			throw new CommandUsageException(this);
 		}
