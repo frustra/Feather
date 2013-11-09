@@ -14,21 +14,22 @@ public class OpUpCommand extends Command {
 
 	public void execute(Entity source, String[] arguments) {
 		if (arguments.length == 0) {
+			if (source.isOperator()) {
+				throw new CommandException("You're already an operator");
+			}
 			Command.execute("op " + source.getName());
 			source.sendMessage("You now have op");
 		} else if (arguments.length == 1) {
 			Player target = Bootstrap.server.fetchPlayer(arguments[0]);
 			if (target == null) {
 				throw new CommandException(arguments[0] + " hasn't played here");
-			} else {
-				if (target.isAllowedOperator()) {
-					throw new CommandException(target + " is already allowed to /opup");
-				} else {
-					target.makeAllowedOperator();
-					target.sendMessage("You now have access to /opup");
-					source.sendMessage(target + " now has access to /opup");
-				}
 			}
+			if (target.isAllowedOperator()) {
+				throw new CommandException(target + " is already allowed to /opup");
+			}
+			target.makeAllowedOperator();
+			target.sendMessage("You now have access to /opup");
+			source.sendMessage(target + " now has access to /opup");
 		} else throw new CommandUsageException(this);
 	}
 
