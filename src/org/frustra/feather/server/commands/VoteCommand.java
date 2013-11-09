@@ -1,5 +1,8 @@
 package org.frustra.feather.server.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.frustra.feather.server.Bootstrap;
 import org.frustra.feather.server.Command;
 import org.frustra.feather.server.CommandException;
@@ -74,5 +77,21 @@ public class VoteCommand extends Command {
 
 	public String getUsage(Entity source) {
 		return "/vote <kick|yes|no> [player]";
+	}
+
+	public List<String> getCompletionList(Entity source, String[] arguments) {
+		ArrayList<String> list = new ArrayList<String>();
+		if (arguments.length == 1) {
+			list.add("kick");
+			list.add("yes");
+			list.add("no");
+		} else if (arguments.length == 2) {
+			for (Player p : Bootstrap.server.getPlayers()) {
+				if (p.getName().startsWith(arguments[1])) {
+					list.add(p.getName());
+				}
+			}
+		}
+		return list;
 	}
 }
