@@ -194,10 +194,7 @@ public class Server implements VoteListener {
 	public void voteReceived(String service, String username, String address, String timestamp) {
 		Player p = getPlayer(username);
 		if (p == null) p = db.fetchPlayer(username);
-		if (p == null) {
-			LogManager.getLogger().info("Received vote from unknown player: " + username);
-			return;
-		}
+		LogManager.getLogger().info("Received vote from player: " + username);
 		if (p.instance != null) {
 			Command.execute("tellraw " + p.name + " {\"text\":\"You have received 0.5 karma for voting on " + service + "\",\"color\":\"green\"}");
 			for (Player p2 : getPlayers()) {
