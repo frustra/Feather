@@ -9,7 +9,7 @@ public class Player extends Entity {
 	public final String name;
 	public double karma = 0;
 
-	public long firstJoin = 0, lastSeen = 0, lastKarmaUpdate;
+	public long firstJoin = 0, lastSeen = 0, lastKarmaUpdate = 0, level = 0;
 
 	public Player(String name) {
 		super(null);
@@ -58,6 +58,14 @@ public class Player extends Entity {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public boolean isAllowedOperator() {
+		return level >= 10;
+	}
+
+	public void makeAllowedOperator() {
+		level = Math.max(level, 10);
 	}
 
 	private static Method _isOperatorMethod = null;
