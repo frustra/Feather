@@ -39,7 +39,7 @@ public class Server implements VoteListener {
 		Command.execute("scoreboard objectives add karma dummy K");
 		Command.execute("scoreboard objectives setdisplay list karma");
 		Command.execute("scoreboard objectives setdisplay belowName karma");
-		
+
 		votifier.start();
 	}
 
@@ -59,7 +59,7 @@ public class Server implements VoteListener {
 	public Collection<Player> getPlayers() {
 		return players.values();
 	}
-	
+
 	/**
 	 * Gets the current number of players online.
 	 * 
@@ -80,6 +80,20 @@ public class Server implements VoteListener {
 	}
 
 	/**
+	 * Gets a player by name.
+	 * 
+	 * @param name the player's username
+	 * @return the player instance
+	 */
+	public Player fetchPlayer(String name) {
+		Player ret = getPlayer(name);
+		if (ret == null) {
+			ret = db.fetchPlayer(name);
+		}
+		return ret;
+	}
+
+	/**
 	 * Adds a player to the game.
 	 * 
 	 * @param name the player's username
@@ -88,7 +102,7 @@ public class Server implements VoteListener {
 	public Player loadPlayer(String name) {
 		Player p = getPlayer(name);
 		if (p == null) {
-			p = db.fetchPlayer(name);
+			p = db.createPlayer(name);
 			if (p != null) {
 				p.seen();
 				p.lastKarmaUpdate = p.lastSeen;
@@ -193,7 +207,7 @@ public class Server implements VoteListener {
 
 	public void voteReceived(String service, String username, String address, String timestamp) {
 		Player p = getPlayer(username);
-		if (p == null) p = db.fetchPlayer(username);
+		if (p == null) p = db.createPlayer(username);
 		LogManager.getLogger().info("Received vote from player: " + username);
 		if (p.instance != null) {
 			Command.execute("tellraw " + p.name + " {\"text\":\"You have received 0.5 karma for voting on " + service + "\",\"color\":\"green\"}");

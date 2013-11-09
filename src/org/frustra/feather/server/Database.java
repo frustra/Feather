@@ -29,7 +29,7 @@ public class Database {
 		}
 	}
 
-	public Player fetchPlayer(String name) {
+	public Player createPlayer(String name) {
 		Player p = new Player(name);
 		try {
 			db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
@@ -41,6 +41,32 @@ public class Database {
 				p.lastSeen = c.getInteger("lastSeen");
 			} else {
 				p.firstJoin = p.lastSeen = System.currentTimeMillis() / 1000;
+			}
+			c.close();
+			db.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				db.rollback();
+			} catch (SqlJetException e1) {
+				e1.printStackTrace();
+			}
+			return null;
+		}
+		return p;
+	}
+
+	public Player fetchPlayer(String name) {
+		Player p = null;
+		try {
+			db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
+			ISqlJetTable playersTable = db.getTable("players");
+			ISqlJetCursor c = playersTable.lookup(playersTable.getPrimaryKeyIndexName(), name);
+			if (!c.eof()) {
+				p = new Player(name);
+				p.karma = c.getInteger("karma");
+				p.firstJoin = c.getInteger("firstJoin");
+				p.lastSeen = c.getInteger("lastSeen");
 			}
 			c.close();
 			db.commit();
