@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.frustra.feather.server.logging.LogManager;
 import org.frustra.feather.server.votifer.VoteListener;
 import org.frustra.feather.server.votifer.VotifierLite;
 import org.frustra.feather.server.voting.KickVote;
@@ -113,7 +114,7 @@ public class Server implements VoteListener {
 
 	public void updatePlayer(Player player) {
 		db.savePlayer(player);
-		Command.execute("scoreboard players set " + player.getName() + " karma " + (long) player.getKarma());
+		if (player.instance != null) Command.execute("scoreboard players set " + player.getName() + " karma " + (long) player.getKarma());
 	}
 
 	/**
@@ -191,6 +192,19 @@ public class Server implements VoteListener {
 	}
 
 	public void voteReceived(String service, String username, String address, String timestamp) {
-		System.out.println(service + " : " + username + " : " + address + " : " + timestamp);
+		Player p = getPlayer(username);
+		if (p == null) p = db.fetchPlayer(username);
+		if (p == null) {
+			LogManager.getLogger().info("Received vote from unknown player: " + username);
+			return;
+		}
+		if (p.instance != null) {
+			Command.execute("tellraw " + p.name + " {\"text\":\"You have received 0.5 karma for voting on " + service + "\",\"color\":\"green\"}");
+			for (Player p2 : getPlayers()) {
+				if (p2.equals(p)) continue;
+				Command.execute("tellraw " + p2.name + " {\"text\":\"" + p.name + " has received 0.5 karma for voting on " + service + "\",\"color\":\"green\"}");
+			}
+		}
+		p.setKarma(p.karma + 0.5);
 	}
 }
