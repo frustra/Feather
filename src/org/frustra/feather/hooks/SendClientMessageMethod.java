@@ -5,10 +5,9 @@ import org.frustra.filament.hooking.CustomClassNode;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.MethodHook;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
-
-import com.sun.xml.internal.ws.org.objectweb.asm.Opcodes;
 
 public class SendClientMessageMethod extends MethodHook implements HookingPassTwo {
 	public boolean match(CustomClassNode node) throws BadHookException {

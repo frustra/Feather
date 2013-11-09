@@ -8,12 +8,11 @@ import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassTwo;
 import org.frustra.filament.hooking.types.InstructionHook;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-
-import com.sun.xml.internal.ws.org.objectweb.asm.Opcodes;
 
 public class CommandTabCompletionMethod extends InstructionHook implements HookingPassTwo {
 	public boolean match(CustomClassNode node) {

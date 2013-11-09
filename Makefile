@@ -21,7 +21,7 @@ make-jar: compile-bin
 
 fetch-deps:
 	-git clone git://github.com/xthexder/filament.git deps/filament
-	cd deps/filament; git pull
+	cd deps/filament; git fetch --all; git reset --hard origin/master
 
 build-deps: fetch-deps
 	cd deps/filament; \

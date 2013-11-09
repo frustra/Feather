@@ -5,11 +5,10 @@ import org.frustra.filament.hooking.HookUtil;
 import org.frustra.filament.hooking.Hooks;
 import org.frustra.filament.hooking.types.HookingPassOne;
 import org.frustra.filament.hooking.types.InstructionHook;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-
-import com.sun.xml.internal.ws.org.objectweb.asm.Type;
 
 public class PlayerHandlerClass extends InstructionHook implements HookingPassOne {
 	public boolean match(CustomClassNode node) {

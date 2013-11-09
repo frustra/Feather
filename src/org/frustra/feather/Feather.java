@@ -36,6 +36,7 @@ public class Feather {
 				return defineClass(name, buf, 0, buf.length);
 			}
 		};
+		
 		loader.loadJar(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
