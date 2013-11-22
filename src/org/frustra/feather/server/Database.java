@@ -114,7 +114,7 @@ public class Database {
 				LogManager.getLogger().info("feather.sqlite not found, creating it now");
 				db.getOptions().setAutovacuum(true);
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
-				db.createTable("create table players (name text not null primary key, karma real default 0, firstJoin int, lastSeen int, playTime int, lastLike int, level int default 0)");
+				db.createTable("create table players (name text not null primary key, karma real default 0, firstJoin int, lastSeen int, playTime int default 0, lastLike int default 0, level int default 0)");
 				db.getOptions().setUserVersion(1);
 				db.commit();
 			}
