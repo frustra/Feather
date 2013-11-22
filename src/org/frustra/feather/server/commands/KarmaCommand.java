@@ -32,15 +32,19 @@ public class KarmaCommand extends Command {
 
 		Player target = Bootstrap.server.getPlayer(targetName);
 		if (target != null) {
-			int amount = Integer.parseInt(amountString);
-			if (arguments[0].equals("set")) {
-				target.setKarma(amount);
-			} else if (arguments[0].equals("add")) {
-				target.setKarma(target.getKarma() + amount);
-			} else {
-				throw new CommandUsageException(this);
+			try {
+				int amount = Integer.parseInt(amountString);
+				if (arguments[0].equals("set")) {
+					target.setKarma(amount);
+				} else if (arguments[0].equals("add")) {
+					target.setKarma(target.getKarma() + amount);
+				} else {
+					throw new CommandUsageException(this);
+				}
+			} catch (NumberFormatException e) {
+				throw new CommandException("Invalid amount specified: " + amountString);
 			}
-			source.sendMessage("%s's karma set to %s", new Object[] { target, target.karma });
+			source.sendMessage("%s's karma set to %s", target, target.karma);
 		} else {
 			throw new CommandException("Target player not found");
 		}

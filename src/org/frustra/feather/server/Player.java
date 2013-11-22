@@ -9,7 +9,7 @@ public class Player extends Entity {
 	public final String name;
 	public double karma = 0;
 
-	public long firstJoin = 0, lastSeen = 0, lastKarmaUpdate = 0, level = 0;
+	public long firstJoin = 0, playTime = 0, lastSeen = 0, lastLike = 0, lastKarmaUpdate = 0, level = 0;
 
 	public Player(String name) {
 		super(null);

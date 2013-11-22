@@ -1,9 +1,7 @@
 package org.frustra.feather.server.commands;
 
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.frustra.feather.server.Bootstrap;
@@ -22,17 +20,40 @@ public class InfoCommand extends Command {
 		return true;
 	}
 
-	private static String formatDate(long unix) {
-		Calendar now = Calendar.getInstance();
-		Calendar cal = Calendar.getInstance();
+	public final static long ONE_MINUTE = 60;
+	public final static long ONE_HOUR = ONE_MINUTE * 60;
+	public final static long ONE_DAY = ONE_HOUR * 24;
 
-		SimpleDateFormat format = new SimpleDateFormat("MMM d 'at' HH:mm");
-		Date date = new Date(unix * 1000);
-		cal.setTime(date);
-		if (cal.get(Calendar.YEAR) != now.get(Calendar.YEAR)) {
-			format = new SimpleDateFormat("MMM d, yyyy 'at' HH:mm");
+	public static String secondsToString(long duration) {
+		String res = "";
+		long tmp = 0;
+		if (duration >= 1) {
+			tmp = duration / ONE_DAY;
+			if (tmp > 0) {
+				duration -= tmp * ONE_DAY;
+				res += tmp + " day";
+				if (tmp > 1) res += "s";
+				if (duration >= ONE_MINUTE) res += ", ";
+			}
+
+			tmp = duration / ONE_HOUR;
+			if (tmp > 0) {
+				duration -= tmp * ONE_HOUR;
+				res += tmp + " hour";
+				if (tmp > 1) res += "s";
+				if (duration >= ONE_MINUTE) res += ", ";
+			}
+
+			tmp = duration / ONE_MINUTE;
+			if (tmp > 0) {
+				duration -= tmp * ONE_MINUTE;
+				res += tmp + " minute";
+				if (tmp > 1) res += "s";
+			}
+			return res;
+		} else {
+			return "0 seconds";
 		}
-		return format.format(date);
 	}
 
 	public void execute(Entity source, String[] arguments) {
@@ -42,12 +63,14 @@ public class InfoCommand extends Command {
 				throw new CommandException(target + " hasn't played here");
 			}
 
-			String lastSeenString = "is currently online";
-			if (target.instance == null) {
-				lastSeenString = "was last seen " + formatDate(target.lastSeen);
+			source.sendMessage("==== %s ====", target);
+			if (target.instance != null) {
+				source.sendMessage("Currently online");
+			} else {
+				source.sendMessage("Last Seen: %s ago" + secondsToString(System.currentTimeMillis() / 1000 - target.lastSeen));
 			}
-
-			source.sendMessage("%s has %s karma, first joined %s, and %s", new Object[] { target, target.karma, formatDate(target.firstJoin), lastSeenString });
+			source.sendMessage("Karma: %s", new DecimalFormat("#.##").format(target.karma));
+			source.sendMessage("Time online: %s", secondsToString(target.playTime));
 		} else {
 			throw new CommandUsageException(this);
 		}

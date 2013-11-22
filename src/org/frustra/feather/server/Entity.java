@@ -35,19 +35,10 @@ public class Entity {
 	/**
 	 * Sends some text to this entity
 	 * 
-	 * @param str the text to send
-	 */
-	public void sendMessage(String str) {
-		sendMessage(str, new Object[0]);
-	}
-
-	/**
-	 * Sends some text to this entity
-	 * 
 	 * @param str the format string
 	 * @param values the list of values to interpolate
 	 */
-	public void sendMessage(String str, Object[] values) {
+	public void sendMessage(String str, Object... values) {
 		try {
 			if (_sendMessage == null) _sendMessage = HookUtil.lookupMethod("Command.sendEntityMessage");
 			_sendMessage.invoke(null, instance, str, values);

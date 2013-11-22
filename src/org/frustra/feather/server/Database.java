@@ -39,6 +39,8 @@ public class Database {
 				p.karma = c.getInteger("karma");
 				p.firstJoin = c.getInteger("firstJoin");
 				p.lastSeen = c.getInteger("lastSeen");
+				p.playTime = c.getInteger("playTime");
+				p.lastLike = c.getInteger("lastLike");
 				p.level = c.getInteger("level");
 			} else {
 				p.firstJoin = p.lastSeen = System.currentTimeMillis() / 1000;
@@ -68,6 +70,8 @@ public class Database {
 				p.karma = c.getInteger("karma");
 				p.firstJoin = c.getInteger("firstJoin");
 				p.lastSeen = c.getInteger("lastSeen");
+				p.playTime = c.getInteger("playTime");
+				p.lastLike = c.getInteger("lastLike");
 				p.level = c.getInteger("level");
 			}
 			c.close();
@@ -88,7 +92,7 @@ public class Database {
 		try {
 			db.beginTransaction(SqlJetTransactionMode.WRITE);
 			ISqlJetTable playersTable = db.getTable("players");
-			playersTable.insertOr(SqlJetConflictAction.REPLACE, p.name, p.karma, p.firstJoin, p.lastSeen, p.level);
+			playersTable.insertOr(SqlJetConflictAction.REPLACE, p.name, p.karma, p.firstJoin, p.lastSeen, p.playTime, p.lastLike, p.level);
 			db.commit();
 		} catch (Exception e) {
 			try {
@@ -110,7 +114,7 @@ public class Database {
 				LogManager.getLogger().info("feather.sqlite not found, creating it now");
 				db.getOptions().setAutovacuum(true);
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
-				db.createTable("create table players (name text not null primary key, karma real default 0, firstJoin int, lastSeen int, level int default 0)");
+				db.createTable("create table players (name text not null primary key, karma real default 0, firstJoin int, lastSeen int, playTime int, lastLike int, level int default 0)");
 				db.getOptions().setUserVersion(1);
 				db.commit();
 			}

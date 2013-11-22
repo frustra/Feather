@@ -1,5 +1,6 @@
 package org.frustra.feather.server.commands;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +23,26 @@ public class LikeCommand extends Command {
 	public void execute(Entity source, String[] arguments) {
 		if (arguments.length != 1) throw new CommandUsageException(this);
 
+		long currentTime = System.currentTimeMillis() / 1000;
+		Player p = source.getPlayer();
 		Player target = Bootstrap.server.getPlayer(arguments[0]);
-		if (target != null) {
-			double amount = Math.log(source.getPlayer().getKarma()) / Math.log(2);
-			target.setKarma(target.getKarma() + amount);
+		if (target != null && !p.equals(target)) {
+			if (p.getKarma() > 1) {
+				if (currentTime - p.lastLike > 3600) {
+					p.lastLike = currentTime;
+					double amount = Math.log(p.getKarma()) / Math.log(2);
+					target.setKarma(target.getKarma() + amount);
+					String formatedAmount = new DecimalFormat("#.##").format(amount);
+					source.sendMessage("%s has received %s karma", target, formatedAmount);
+					target.sendMessage("You have received %s karma from %s", formatedAmount, p);
+				} else {
+					throw new CommandException("You can't like for another " + InfoCommand.secondsToString(3600 - (currentTime - p.lastLike)));
+				}
+			} else {
+				throw new CommandException("You don't have enough karma for that!");
+			}
+		} else if (target != null) {
+			throw new CommandException("You can't like yourself!");
 		} else {
 			throw new CommandException("Target player not found");
 		}

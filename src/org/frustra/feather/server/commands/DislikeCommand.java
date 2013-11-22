@@ -1,5 +1,6 @@
 package org.frustra.feather.server.commands;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +23,26 @@ public class DislikeCommand extends Command {
 	public void execute(Entity source, String[] arguments) {
 		if (arguments.length != 1) throw new CommandUsageException(this);
 
+		long currentTime = System.currentTimeMillis() / 1000;
+		Player p = source.getPlayer();
 		Player target = Bootstrap.server.getPlayer(arguments[0]);
-		if (target != null) {
-			double amount = Math.log(source.getPlayer().getKarma()) / Math.log(2);
-			target.setKarma(target.getKarma() - amount / 2.0);
+		if (target != null && !p.equals(target)) {
+			if (p.getKarma() > 1) {
+				if (currentTime - p.lastLike > 3600) {
+					p.lastLike = currentTime;
+					double amount = Math.log(p.getKarma()) / Math.log(2);
+					target.setKarma(target.getKarma() - amount / 2.0);
+					String formatedAmount = new DecimalFormat("#.##").format(amount / 2.0);
+					source.sendMessage("%s has lost %s karma", target, formatedAmount);
+					target.sendMessage("You have lost %s karma", formatedAmount);
+				} else {
+					throw new CommandException("You can't dislike for another " + InfoCommand.secondsToString(3600 - (currentTime - p.lastLike)));
+				}
+			} else {
+				throw new CommandException("You don't have enough karma for that!");
+			}
+		} else if (target != null) {
+			throw new CommandException("You can't dislike yourself!");
 		} else {
 			throw new CommandException("Target player not found");
 		}
