@@ -10,9 +10,9 @@ import org.frustra.feather.server.CommandUsageException;
 import org.frustra.feather.server.Entity;
 import org.frustra.feather.server.Player;
 
-public class OpUpCommand extends Command {
+public class SuCommand extends Command {
 	public String getName() {
-		return "opup";
+		return "su";
 	}
 
 	public boolean hasPermission(Entity source) {
@@ -33,16 +33,16 @@ public class OpUpCommand extends Command {
 				throw new CommandException(arguments[0] + " hasn't played here");
 			}
 			if (target.isAllowedOperator()) {
-				throw new CommandException(target + " is already allowed to /opup");
+				throw new CommandException(target + " is already a super user");
 			}
 			target.makeAllowedOperator();
-			target.sendMessage("You now have access to /opup");
-			source.sendMessage(target + " now has access to /opup");
+			target.sendMessage("You are now a super user");
+			source.sendMessage(target + " is now a super user");
 		} else throw new CommandUsageException(this);
 	}
 
 	public String getUsage(Entity source) {
-		return "/opup [player]";
+		return "/su [player]";
 	}
 
 	public List<String> getCompletionList(Entity source, String[] arguments) {
