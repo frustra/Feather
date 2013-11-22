@@ -31,7 +31,7 @@ public class DislikeCommand extends Command {
 				if (currentTime - p.lastLike > 3600) {
 					p.lastLike = currentTime;
 					double amount = Math.log(p.getKarma()) / Math.log(4);
-					target.setKarma(target.getKarma() - amount / 2.0, true);
+					target.setKarma(target.getKarma() - amount / 2.0);
 					String formatedAmount = new DecimalFormat("#.##").format(amount / 2.0);
 					source.sendMessage("%s has lost %s karma", target, formatedAmount);
 					target.sendMessage("You have lost %s karma", formatedAmount);

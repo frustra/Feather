@@ -36,10 +36,10 @@ public class Player extends Entity {
 	 * 
 	 * @param karma
 	 */
-	public void setKarma(double karma, boolean bannable) {
+	public void setKarma(double karma) {
 		this.karma = karma;
 		Bootstrap.server.updatePlayer(this);
-		if (bannable) {
+		if (karma < -10) {
 			Command.execute("ban " + getName() + " Karma too low");
 		}
 	}

@@ -31,7 +31,7 @@ public class LikeCommand extends Command {
 				if (currentTime - p.lastLike > 3600) {
 					p.lastLike = currentTime;
 					double amount = Math.log(p.getKarma()) / Math.log(4);
-					target.setKarma(target.getKarma() + amount, false);
+					target.setKarma(target.getKarma() + amount);
 					String formatedAmount = new DecimalFormat("#.##").format(amount);
 					source.sendMessage("%s has received %s karma", target, formatedAmount);
 					target.sendMessage("You have received %s karma from %s", formatedAmount, p);
