@@ -30,7 +30,7 @@ public class KarmaCommand extends Command {
 			throw new CommandUsageException(this);
 		}
 
-		Player target = Bootstrap.server.getPlayer(targetName);
+		Player target = Bootstrap.server.fetchPlayer(targetName);
 		if (target != null) {
 			try {
 				int amount = Integer.parseInt(amountString);

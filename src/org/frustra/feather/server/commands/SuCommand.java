@@ -36,7 +36,7 @@ public class SuCommand extends Command {
 				throw new CommandException(target + " is already a super user");
 			}
 			target.makeAllowedOperator();
-			target.sendMessage("You are now a super user");
+			if (target.instance != null) target.sendMessage("You are now a super user");
 			source.sendMessage(target + " is now a super user");
 		} else throw new CommandUsageException(this);
 	}
