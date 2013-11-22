@@ -67,7 +67,7 @@ public class InfoCommand extends Command {
 			if (target.instance != null) {
 				source.sendMessage("Currently online");
 			} else {
-				source.sendMessage("Last Seen: %s ago" + secondsToString(System.currentTimeMillis() / 1000 - target.lastSeen));
+				source.sendMessage("Last Seen: %s ago", secondsToString(System.currentTimeMillis() / 1000 - target.lastSeen));
 			}
 			source.sendMessage("Karma: %s", new DecimalFormat("#.##").format(target.karma));
 			source.sendMessage("Time online: %s", secondsToString(target.playTime));
