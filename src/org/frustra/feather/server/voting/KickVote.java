@@ -25,7 +25,7 @@ public class KickVote extends Vote {
 	public void passed() {
 		// Lose between 1 and 10 karma, depending on the proportion of kick agreement
 		double lostKarma = Math.ceil(score / eligibleKarma * 10);
-		target.setKarma(target.karma - lostKarma);
+		target.setKarma(target.karma - lostKarma, true);
 
 		Command.execute("kick " + target.name + " You have been voted off the server, and lost " + lostKarma + " karma.");
 		Command.execute("tellraw @a {\"text\":\"" + target.name + " has been voted off the server, and lost " + lostKarma + " karma\",\"color\":\"blue\"}");

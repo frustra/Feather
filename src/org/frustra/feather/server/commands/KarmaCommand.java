@@ -35,9 +35,9 @@ public class KarmaCommand extends Command {
 			try {
 				int amount = Integer.parseInt(amountString);
 				if (arguments[0].equals("set")) {
-					target.setKarma(amount);
+					target.setKarma(amount, true);
 				} else if (arguments[0].equals("add")) {
-					target.setKarma(target.getKarma() + amount);
+					target.setKarma(target.getKarma() + amount, true);
 				} else {
 					throw new CommandUsageException(this);
 				}

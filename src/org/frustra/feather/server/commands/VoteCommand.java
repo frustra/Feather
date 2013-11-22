@@ -25,23 +25,27 @@ public class VoteCommand extends Command {
 			}
 
 			if (arguments[0].equals("kick") && arguments.length == 2) {
-				Player target = Bootstrap.server.getPlayer(arguments[1]);
-				if (target != null) {
-					if (sourcePlayer.equals(target)) throw new CommandException("You cannot vote kick yourself");
-					KickVote vote = Bootstrap.server.activeKickVotes.get(target);
-					if (vote == null) {
-						Command.execute("tellraw @a {\"text\":\"A vote kick has been initiated on " + target.name + "\",\"color\":\"blue\"}");
-						vote = new KickVote(target);
-						for (Player p : Bootstrap.server.getPlayers()) {
-							if (!p.equals(sourcePlayer) && !p.equals(target)) {
-								Command.execute("tellraw " + p.name + " {\"text\":\"Use /vote <yes|no> [player] to respond.\",\"color\":\"blue\"}");
+				if (Bootstrap.server.onlinePlayers() > 2) {
+					Player target = Bootstrap.server.getPlayer(arguments[1]);
+					if (target != null) {
+						if (sourcePlayer.equals(target)) throw new CommandException("You cannot vote kick yourself");
+						KickVote vote = Bootstrap.server.activeKickVotes.get(target);
+						if (vote == null) {
+							Command.execute("tellraw @a {\"text\":\"A vote kick has been initiated on " + target.name + "\",\"color\":\"blue\"}");
+							vote = new KickVote(target);
+							for (Player p : Bootstrap.server.getPlayers()) {
+								if (!p.equals(sourcePlayer) && !p.equals(target)) {
+									Command.execute("tellraw " + p.name + " {\"text\":\"Use /vote <yes|no> [player] to respond.\",\"color\":\"blue\"}");
+								}
 							}
 						}
-					}
 
-					vote.addVote(sourcePlayer, true);
+						vote.addVote(sourcePlayer, true);
+					} else {
+						throw new CommandException("This player is not currently online.");
+					}
 				} else {
-					throw new CommandException("This player is not currently online.");
+					throw new CommandException("There needs to be at least 3 players on line to start a vote kick.");
 				}
 			} else if (arguments[0].equals("yes") || arguments[0].equals("no")) {
 				if (Bootstrap.server.activeKickVotes.size() < 1) {

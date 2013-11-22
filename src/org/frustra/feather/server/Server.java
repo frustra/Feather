@@ -216,6 +216,6 @@ public class Server implements VoteListener {
 				Command.execute("tellraw " + p2.name + " {\"text\":\"" + p.name + " has received 0.5 karma for voting on " + service + "\",\"color\":\"green\"}");
 			}
 		}
-		p.setKarma(p.karma + 0.5);
+		p.setKarma(p.karma + 0.5, false);
 	}
 }
