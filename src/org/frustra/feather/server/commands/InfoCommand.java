@@ -50,9 +50,14 @@ public class InfoCommand extends Command {
 				res += tmp + " minute";
 				if (tmp > 1) res += "s";
 			}
-			return res;
+			
+			if (res.length() > 0) {
+				return res;
+			} else {
+				return "less than 1 minute";
+			}
 		} else {
-			return "0 seconds";
+			return "less than 1 minute";
 		}
 	}
 
