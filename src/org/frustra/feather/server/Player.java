@@ -3,7 +3,7 @@ package org.frustra.feather.server;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.frustra.filament.hooking.HookUtil;
+import org.frustra.filament.HookUtil;
 
 public class Player extends Entity {
 	public final String name;

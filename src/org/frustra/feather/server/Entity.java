@@ -2,8 +2,8 @@ package org.frustra.feather.server;
 
 import java.lang.reflect.Method;
 
-import org.frustra.filament.hooking.HookUtil;
-import org.frustra.filament.hooking.Hooks;
+import org.frustra.filament.HookUtil;
+import org.frustra.filament.Hooks;
 
 /**
  * Represents an entity that can issue commands. This is a helper class, which

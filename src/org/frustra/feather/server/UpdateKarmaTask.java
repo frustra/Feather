@@ -1,6 +1,5 @@
 package org.frustra.feather.server;
 
-
 public class UpdateKarmaTask implements Runnable {
 	public void run() {
 		long currentTime = System.currentTimeMillis() / 1000;

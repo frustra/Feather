@@ -50,7 +50,7 @@ public class InfoCommand extends Command {
 				res += tmp + " minute";
 				if (tmp > 1) res += "s";
 			}
-			
+
 			if (res.length() > 0) {
 				return res;
 			} else {

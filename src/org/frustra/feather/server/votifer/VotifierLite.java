@@ -27,9 +27,9 @@ import org.frustra.feather.server.logging.LogManager;
 public class VotifierLite extends Thread {
 	private List<VoteListener> listeners = new ArrayList<VoteListener>();
 	private PrivateKey privateKey;
-	
+
 	public boolean running = false;
-	
+
 	public void init() {
 		try {
 			File folder = new File("votifier");
@@ -37,11 +37,11 @@ public class VotifierLite extends Thread {
 				folder.mkdir();
 
 				LogManager.syslog("Creating new votifier RSA keypair");
-				
+
 				KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
 				RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4);
 				keygen.initialize(spec);
-				
+
 				KeyPair keyPair = keygen.generateKeyPair();
 
 				FileOutputStream out = new FileOutputStream("votifier/public.key");
@@ -54,7 +54,7 @@ public class VotifierLite extends Thread {
 				out.close();
 			} else {
 				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-				
+
 				File privateKeyFile = new File("votifier/private.key");
 				FileInputStream in = new FileInputStream(privateKeyFile);
 				byte[] buf = new byte[(int) privateKeyFile.length()];
@@ -73,30 +73,30 @@ public class VotifierLite extends Thread {
 
 	public void run() {
 		setName("VotifierLite");
-		
+
 		ServerSocket server = null;
 		try {
 			server = new ServerSocket(8192);
 			running = true;
-			
+
 			LogManager.getLogger().info("Listening for votes on port 8192");
-			
+
 			while (running) {
 				try {
 					Socket socket = server.accept();
 					socket.setSoTimeout(5000);
 					PrintStream out = null;
 					InputStream in = null;
-					
+
 					try {
 						out = new PrintStream(socket.getOutputStream());
 						out.println("VOTIFIER 1.9");
 						out.flush();
-	
+
 						in = socket.getInputStream();
 						byte[] buf = new byte[256];
 						in.read(buf, 0, buf.length);
-	
+
 						Cipher cipher = Cipher.getInstance("RSA");
 						cipher.init(Cipher.DECRYPT_MODE, privateKey);
 						buf = cipher.doFinal(buf);
@@ -107,7 +107,7 @@ public class VotifierLite extends Thread {
 							String username = scan.nextLine();
 							String address = scan.nextLine();
 							String timestamp = scan.nextLine();
-							
+
 							for (VoteListener listener : listeners) {
 								listener.voteReceived(service, username, address, timestamp);
 							}
@@ -131,11 +131,11 @@ public class VotifierLite extends Thread {
 			} catch (IOException e) {}
 		}
 	}
-	
+
 	public void addVoteListener(VoteListener listener) {
 		listeners.add(listener);
 	}
-	
+
 	public void removeVoteListener(VoteListener listener) {
 		listeners.remove(listener);
 	}

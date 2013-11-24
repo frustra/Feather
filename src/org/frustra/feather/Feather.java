@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 
 import org.frustra.feather.server.logging.LogManager;
 import org.frustra.filament.FilamentClassLoader;
-import org.frustra.filament.hooking.Hooking;
-import org.frustra.filament.injection.Injection;
+import org.frustra.filament.Hooks;
+import org.frustra.filament.Injection;
 
 public class Feather {
 	public static final String version = "1.0.0";
@@ -31,12 +31,8 @@ public class Feather {
 			return;
 		}
 
-		loader = new FilamentClassLoader(debug) {
-			protected Class<?> defineClass(String name, byte[] buf) {
-				return defineClass(name, buf, 0, buf.length);
-			}
-		};
-		
+		loader = new FilamentClassLoader(debug);
+
 		loader.loadJar(minecraftServer);
 		Thread.currentThread().setContextClassLoader(loader);
 
@@ -44,7 +40,7 @@ public class Feather {
 			loader.loadPackage(packageName);
 		}
 
-		Hooking.loadHooks("org.frustra.feather.hooks");
+		Hooks.loadHooks("org.frustra.feather.hooks");
 		Injection.loadInjectors("org.frustra.feather.injectors");
 
 		Class<?> cls = loader.loadClass("net.minecraft.server.MinecraftServer");

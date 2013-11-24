@@ -2,9 +2,9 @@ package org.frustra.feather.injectors;
 
 import java.util.List;
 
+import org.frustra.filament.HookUtil;
 import org.frustra.filament.hooking.BadHookException;
-import org.frustra.filament.hooking.CustomClassNode;
-import org.frustra.filament.hooking.HookUtil;
+import org.frustra.filament.hooking.FilamentClassNode;
 import org.frustra.filament.injection.ClassInjector;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -13,12 +13,12 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class SpawnProtectionInjector extends ClassInjector {
-	public boolean match(CustomClassNode node) throws BadHookException {
+	public boolean match(FilamentClassNode node) throws BadHookException {
 		return node.matches("ServerProperties");
 	}
 
 	@SuppressWarnings("unchecked")
-	public void inject(CustomClassNode node) throws BadHookException {
+	public void inject(FilamentClassNode node) throws BadHookException {
 		for (MethodNode method : (List<MethodNode>) node.methods) {
 			if (HookUtil.compareMethodNode(method, "ServerProperties.isSpawnProtected")) {
 				AbstractInsnNode insn = method.instructions.getFirst();

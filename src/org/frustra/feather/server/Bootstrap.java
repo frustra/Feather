@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 import org.frustra.feather.Feather;
 import org.frustra.feather.server.logging.LogManager;
-import org.frustra.filament.hooking.HookUtil;
+import org.frustra.filament.HookUtil;
 
 public class Bootstrap {
 	public static Object minecraftServer = null;
