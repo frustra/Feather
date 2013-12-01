@@ -2,15 +2,16 @@ package org.frustra.feather.hooks;
 
 import org.frustra.filament.Hooks;
 import org.frustra.filament.hooking.FilamentClassNode;
-import org.frustra.filament.hooking.types.ClassHook;
-import org.frustra.filament.hooking.types.HookingPassOne;
+import org.frustra.filament.hooking.types.ClassProvider;
+import org.frustra.filament.hooking.types.HookingPass;
 
-public class CommandExceptionClass extends ClassHook implements HookingPassOne {
+@HookingPass(1)
+public class CommandExceptionClass extends ClassProvider {
 	public boolean match(FilamentClassNode node) {
-		return node.constants.contains("commands.generic.snytax"); // Not a typo.
+		return node.containsConstant("commands.generic.snytax"); // Not a typo.
 	}
 
-	public void onComplete(FilamentClassNode node) {
+	public void complete(FilamentClassNode node) {
 		Hooks.set("CommandException", node);
 	}
 }

@@ -4,12 +4,13 @@ import org.frustra.filament.HookUtil;
 import org.frustra.filament.Hooks;
 import org.frustra.filament.hooking.BadHookException;
 import org.frustra.filament.hooking.FilamentClassNode;
-import org.frustra.filament.hooking.types.FieldHook;
-import org.frustra.filament.hooking.types.HookingPassTwo;
+import org.frustra.filament.hooking.types.FieldProvider;
+import org.frustra.filament.hooking.types.HookingPass;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 
-public class MinecraftServerClass extends FieldHook implements HookingPassTwo {
+@HookingPass(2)
+public class MinecraftServerClass extends FieldProvider {
 	public boolean match(FilamentClassNode node) throws BadHookException {
 		return node.name.endsWith("MinecraftServer");
 	}
@@ -18,7 +19,7 @@ public class MinecraftServerClass extends FieldHook implements HookingPassTwo {
 		return HookUtil.compareType(Type.getType(f.desc), "BaseCommandManager");
 	}
 
-	public void onComplete(FilamentClassNode node, FieldNode f) {
+	public void complete(FilamentClassNode node, FieldNode f) throws BadHookException {
 		Hooks.set("MinecraftServer", node);
 		Hooks.set("MinecraftServer.commandManager", f);
 	}

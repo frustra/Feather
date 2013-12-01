@@ -4,12 +4,13 @@ import org.frustra.filament.HookUtil;
 import org.frustra.filament.Hooks;
 import org.frustra.filament.hooking.BadHookException;
 import org.frustra.filament.hooking.FilamentClassNode;
-import org.frustra.filament.hooking.types.HookingPassTwo;
-import org.frustra.filament.hooking.types.MethodHook;
+import org.frustra.filament.hooking.types.HookingPass;
+import org.frustra.filament.hooking.types.MethodProvider;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
-public class AddCommandMethod extends MethodHook implements HookingPassTwo {
+@HookingPass(2)
+public class AddCommandMethod extends MethodProvider {
 	public boolean match(FilamentClassNode node) throws BadHookException {
 		return node.matches("CommandManager");
 	}
@@ -19,7 +20,7 @@ public class AddCommandMethod extends MethodHook implements HookingPassTwo {
 		return args.length == 1 && HookUtil.compareType(args[0], "BaseCommand");
 	}
 
-	public void onComplete(FilamentClassNode node, MethodNode m) {
+	public void complete(FilamentClassNode node, MethodNode m) {
 		Hooks.set("CommandManager.addCommand", m);
 	}
 }

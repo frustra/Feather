@@ -6,17 +6,18 @@ import org.frustra.filament.HookUtil;
 import org.frustra.filament.Hooks;
 import org.frustra.filament.hooking.BadHookException;
 import org.frustra.filament.hooking.FilamentClassNode;
-import org.frustra.filament.hooking.types.HookingPassTwo;
-import org.frustra.filament.hooking.types.InstructionHook;
+import org.frustra.filament.hooking.types.HookingPass;
+import org.frustra.filament.hooking.types.InstructionProvider;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class CommandTabCompletionMethod extends InstructionHook implements HookingPassTwo {
+@HookingPass(2)
+public class CommandTabCompletionMethod extends InstructionProvider {
 	public boolean match(FilamentClassNode node) {
-		return node.constants.contains("commands.op.success");
+		return node.containsConstant("commands.op.success");
 	}
 
 	public boolean match(FilamentClassNode node, MethodNode m) throws BadHookException {
@@ -35,7 +36,7 @@ public class CommandTabCompletionMethod extends InstructionHook implements Hooki
 		return false;
 	}
 
-	public void onComplete(FilamentClassNode node, MethodNode m, AbstractInsnNode insn) {
+	public void complete(FilamentClassNode node, MethodNode m, AbstractInsnNode insn) {
 		Hooks.set("OpCommand", node);
 		Hooks.set("Command.getCompletionList", m);
 		Hooks.set("PlayerHandler.isOperator", new MethodNode(Opcodes.ACC_PUBLIC, ((MethodInsnNode) insn).name, ((MethodInsnNode) insn).desc, null, null));

@@ -3,13 +3,14 @@ package org.frustra.feather.hooks;
 import org.frustra.filament.Hooks;
 import org.frustra.filament.hooking.BadHookException;
 import org.frustra.filament.hooking.FilamentClassNode;
-import org.frustra.filament.hooking.types.HookingPassTwo;
-import org.frustra.filament.hooking.types.MethodHook;
+import org.frustra.filament.hooking.types.HookingPass;
+import org.frustra.filament.hooking.types.MethodProvider;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
-public class SendClientMessageMethod extends MethodHook implements HookingPassTwo {
+@HookingPass(2)
+public class SendClientMessageMethod extends MethodProvider {
 	public boolean match(FilamentClassNode node) throws BadHookException {
 		return node.matches("Command");
 	}
@@ -19,7 +20,7 @@ public class SendClientMessageMethod extends MethodHook implements HookingPassTw
 		return (m.access & Opcodes.ACC_STATIC) != 0 && m.desc.equals(Type.getMethodDescriptor(Type.VOID_TYPE, args));
 	}
 
-	public void onComplete(FilamentClassNode node, MethodNode m) {
+	public void complete(FilamentClassNode node, MethodNode m) {
 		Hooks.set("Command.sendEntityMessage", m);
 	}
 }
