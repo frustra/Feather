@@ -41,7 +41,7 @@ public class Feather {
 		}
 
 		Hooks.load("org.frustra.feather.hooks");
-		Injectors.load("org.frustra.feather.injectors");
+		Injectors.register("org.frustra.feather.injectors");
 
 		Class<?> cls = loader.loadClass("net.minecraft.server.MinecraftServer");
 		Method entryPoint = cls.getDeclaredMethod("main", new Class[] { String[].class });

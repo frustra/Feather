@@ -1,5 +1,6 @@
 package org.frustra.feather.server;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.frustra.filament.HookUtil;
@@ -14,6 +15,7 @@ public class Entity {
 
 	private static Method _getName = null;
 	private static Method _sendMessage = null;
+	private static Constructor<?> _textComponentConstructor = null;
 
 	public Entity(Object instance) {
 		this.instance = instance;
@@ -40,8 +42,14 @@ public class Entity {
 	 */
 	public void sendMessage(String str, Object... values) {
 		try {
-			if (_sendMessage == null) _sendMessage = HookUtil.lookupMethod("Command.sendEntityMessage");
-			_sendMessage.invoke(null, instance, str, values);
+			if (_textComponentConstructor == null) {
+				Class<?> cls = HookUtil.lookupClass("TextComponent");
+				_textComponentConstructor = cls.getConstructor(String.class);
+				_textComponentConstructor.setAccessible(true);
+			}
+			Object textComponent = _textComponentConstructor.newInstance(String.format(str, values));
+			if (_sendMessage == null) _sendMessage = HookUtil.lookupMethod("CommandEntity.sendMessage");
+			_sendMessage.invoke(instance, textComponent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
